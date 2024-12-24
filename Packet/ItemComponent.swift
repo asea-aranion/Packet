@@ -23,12 +23,12 @@ struct ItemComponent: View {
                 Spacer()
             }
             HStack {
-                Text(item.category)
-                    .font(.caption)
+                Text(item.category?.name ?? "")
+                    .font(.system(size: 18))
                 Image(systemName: "circle.fill")
                     .font(.system(size: 8))
-                Text(item.bag)
-                    .font(.caption)
+                Text(item.bag?.name ?? "")
+                    .font(.system(size: 18))
                 Spacer()
             }
             .padding(5)

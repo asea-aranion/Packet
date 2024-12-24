@@ -15,6 +15,7 @@ struct PacketApp: App {
             ContentView()
         }
         .modelContainer(for: List.self)
-        .modelContainer(for: UserInfo.self)
+        .modelContainer(for: Bag.self)
+        .modelContainer(for: Category.self)
     }
 }

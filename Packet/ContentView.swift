@@ -10,12 +10,37 @@ import SwiftData
 
 struct ContentView: View {
     
-    @Query var userInfo: [UserInfo]
+    @Environment(\.modelContext) var modelContext
+    
+    @State var selectedTab = 2
     
     var body: some View {
-        ListsView(userInfo: userInfo.isEmpty ? UserInfo() : userInfo[0])
+        TabView(selection: $selectedTab) {
+            Tab(value: 1) {
+                
+            } label: {
+                Image(systemName: "checklist")
+                Text("Active List")
+            }
+            
+            Tab(value: 2) {
+                ListsView()
+            } label: {
+                Image(systemName: "archivebox.fill")
+                Text("All Lists")
+            }
+            
+            Tab(value: 3) {
+                
+            } label: {
+                Image(systemName: "person.fill")
+                Text("Preferences")
+            }
+        }
+        .tabViewStyle(.sidebarAdaptable)
     }
 }
+
 
 #Preview {
         do {

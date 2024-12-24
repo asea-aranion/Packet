@@ -13,15 +13,15 @@ class Item {
     var name: String = "New Item"
     var usages: Int = 0
     var quantity: Int = 1
-    var bag: String = ""
-    var category: String = ""
+    @Relationship var bag: Bag?
+    @Relationship var category: Category?
     
     init() {
         
     }
     
     static func copy(from source: Item) -> Item {
-        var newItem = Item()
+        let newItem = Item()
         
         newItem.name = source.name
         newItem.usages = source.usages

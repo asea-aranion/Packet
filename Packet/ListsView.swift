@@ -10,30 +10,56 @@ import SwiftData
 
 struct ListsView: View {
     
+    @Environment(\.modelContext) var modelContext
+    
     @Query var lists: [List]
-    var userInfo: UserInfo
+    
+    @State var path: NavigationPath = NavigationPath()
     
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             ScrollView {
                 LazyVStack {
+                    Button {
+                        let newList = List()
+                        modelContext.insert(newList)
+                    } label: {
+                        VStack(alignment: .leading) {
+                            HStack {
+                                Image(systemName: "plus.circle")
+                                Text("New List")
+                                    .font(.system(size: 18, weight: .bold))
+                                
+                            }
+                            
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(.green)
+                                .frame(height: 8)
+                            
+                        }
+                        
+                        .frame(height: 60)
+                        .padding(.top, 10)
+                        .padding([.leading, .trailing], 15)
+                    }
+                    .buttonStyle(.plain)
+                    .foregroundStyle(.green)
+                    
                     ForEach(lists) { list in
                         GeometryReader { geometry in
-                            NavigationLink(destination: EditListView(list: list)) {
-                                ZStack {
-                                    VStack(spacing: 0) {
+                            Button {
+                                path.append(list)
+                            } label: {
+                                ZStack(alignment: .init(horizontal: .leading, vertical: .top)) {
                                         Rectangle()
                                             .fill(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
                                             .frame(width: geometry.size.width, height: geometry.size.height * 0.15)
+                                            
                                             .padding(0)
-                                        Rectangle()
-                                            .fill(.quinary)
-                                            .frame(width: geometry.size.width, height: geometry.size.height * 0.85)
-                                            .padding(0)
-                                    }
                                     
                                     
-                                    HStack {
+                                    
+                                    HStack(alignment: .center) {
                                         Text(list.name)
                                             .font(.system(size: 20, weight: .bold))
                                             .padding(.leading, 10)
@@ -44,11 +70,12 @@ struct ListsView: View {
                                             .padding(.trailing, 15)
                                             .buttonStyle(.plain)
                                     }
+                                    .frame(height: geometry.size.height)
                                 }
                             }
                             .buttonStyle(.plain)
                         }
-                        
+                        .background(.quinary)
                         .frame(height: 80)
                         .clipShape(RoundedRectangle(cornerSize: .init(width: 10, height: 10)))
                         .padding(15)
@@ -58,6 +85,9 @@ struct ListsView: View {
                 
             }
             .navigationTitle("Packing Lists")
+            .navigationDestination(for: List.self) { list in
+                EditListView(list: list, path: $path)
+            }
         }
     }
 }

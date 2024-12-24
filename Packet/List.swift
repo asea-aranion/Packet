@@ -23,7 +23,7 @@ class List {
     }
     
     static func copy(from source: List) -> List {
-        var copyList = List()
+        let copyList = List()
         copyList.name = source.name
         copyList.colorRed = source.colorRed
         copyList.colorGreen = source.colorGreen

@@ -13,25 +13,20 @@ struct EditListView: View {
     @Environment(\.self) var environment
     @Environment(\.modelContext) var modelContext
     
+    @Query var categories: [Category]
+    @Query var bags: [Bag]
+    
     @State var list: List
     @State var selectedColor: Color = Color.blue
     @State var itemToEdit: Item?
+    @State var categoryFilter: String = "Any"
+    @State var bagFilter: String = "Any"
+    
+    @Binding var path: NavigationPath
     
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
-                
-                Button {
-                    modelContext.insert(List.copy(from: list))
-                    
-                } label: {
-                    Text("Duplicate")
-                        .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
-                        .background(.quinary)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                        .padding([.leading, .trailing], 15)
-                }
-                .buttonStyle(.plain)
                 
                 // edit list name
                 TextField("", text: $list.name)
@@ -52,12 +47,61 @@ struct EditListView: View {
                         list.colorBlue = Double(selectedColor.resolve(in: environment).blue)
                     }
                     .padding(10)
+                    .padding([.leading, .trailing], 15)
+                
+                GeometryReader { geometry in
+                    HStack(spacing: geometry.size.width * 0.1) {
+                        
+                        // duplicate button
+                        Button {
+                            modelContext.insert(List.copy(from: list))
+                            path = NavigationPath()
+                            
+                        } label: {
+                            Text("Duplicate")
+                                .font(.body.bold())
+                                .padding([.top, .bottom], 15)
+                            
+                            .frame(width: geometry.size.width * 0.45)
+                                .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
+                                .background(.quinary)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                        }
+                        .buttonStyle(.plain)
+                        
+                        // delete button
+                        Button {
+                            modelContext.delete(list)
+                            path = NavigationPath()
+                            
+                        } label: {
+                            Text("Delete")
+                                .font(.body.bold())
+                                .padding([.top, .bottom], 15)
+                            
+                            .frame(width: geometry.size.width * 0.45)
+                                .foregroundStyle(.red)
+                                .background(.quinary)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                        }
+                        .buttonStyle(.plain)
+                        
+                    }
+                }
+                .frame(minHeight: 60)
+                .padding([.leading, .trailing], 15)
                 
                 // view and edit list items
                 Text("Items")
-                    .font(.system(size: 18, weight: .bold))
+                    .font(.system(size: 20, weight: .bold))
+                    .foregroundStyle(.background)
+                    .padding([.leading, .trailing], 30)
+                    .padding([.top, .bottom], 15)
+                    .background(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
+                    .clipShape(UnevenRoundedRectangle(cornerRadii:
+                            .init(topLeading: 10, bottomLeading: 0, bottomTrailing: 0, topTrailing: 10)))
                     .padding(.leading, 15)
-                    .padding(.top, 10)
+                    .padding(.top, 20)
                 
                 Button {
                     let newItem = Item()
@@ -85,9 +129,44 @@ struct EditListView: View {
                 .buttonStyle(.plain)
                 .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
                 
+                // item filters
+                GeometryReader { geometry in
+                    HStack(spacing: geometry.size.width * 0.1) {
+                        // category picker
+                        Picker("Filter by category", selection: $categoryFilter) {
+                            Text("Any").tag("Any")
+                            ForEach(categories) { category in
+                                Text(category.name).tag(category.name)
+                            }
+                        }
+                        .padding([.top, .bottom], 15)
+                        .frame(width: geometry.size.width * 0.45)
+                        .background(.quinary)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        
+                        // bag picker
+                        Picker("Filter by bag", selection: $bagFilter) {
+                            Text("Any").tag("Any")
+                            ForEach(bags) { bag in
+                                Text(bag.name).tag(bag.name)
+                            }
+                        }
+                        .padding([.top, .bottom], 15)
+                        .frame(width: geometry.size.width * 0.45)
+                        .background(.quinary)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                    }
+                }
+                .frame(minHeight: 60)
+                .padding([.leading, .trailing], 15)
+                
                 // items in list
-                LazyVStack(alignment: .leading) {
-                    ForEach(list.items ?? []) { item in
+                VStack(alignment: .leading) {
+                    ForEach((list.items ?? [])
+                        .filter({
+                            (categoryFilter == "Any" || $0.category?.name ?? "Any" == categoryFilter)
+                            && (bagFilter == "Any" || $0.bag?.name ?? "Any" == bagFilter)
+                        })) { item in
                         Button {
                             itemToEdit = item
                         } label: {
