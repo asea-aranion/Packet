@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct PacketApp: App {
@@ -13,5 +14,7 @@ struct PacketApp: App {
         WindowGroup {
             ContentView()
         }
+        .modelContainer(for: List.self)
+        .modelContainer(for: UserInfo.self)
     }
 }

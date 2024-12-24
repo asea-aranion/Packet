@@ -6,19 +6,24 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
+    
+    @Query var userInfo: [UserInfo]
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
+        ListsView(userInfo: userInfo.isEmpty ? UserInfo() : userInfo[0])
     }
 }
 
 #Preview {
-    ContentView()
+        do {
+            let previewer = try Previewer()
+
+            return ContentView()
+                .modelContainer(previewer.container)
+        } catch {
+            return Text("Failed to create preview: \(error.localizedDescription)")
+        }
 }
