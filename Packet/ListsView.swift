@@ -50,15 +50,12 @@ struct ListsView: View {
                                     Rectangle()
                                         .fill(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
                                         .frame(width: geometry.size.width, height: geometry.size.height * 0.15)
-                                    
                                         .padding(0)
-                                    
-                                    
                                     
                                     HStack(alignment: .center) {
                                         Text(list.name)
                                             .font(.system(size: 20, weight: .bold))
-                                            .padding(.leading, 10)
+                                            .padding(.leading, 15)
                                         Spacer()
                                         
                                         Image(systemName: "chevron.right")
