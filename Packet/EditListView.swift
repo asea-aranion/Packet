@@ -58,11 +58,11 @@ struct EditListView: View {
                             path = NavigationPath()
                             
                         } label: {
-                            Text("Duplicate")
+                            Text("\(Image(systemName: "square.on.square")) Duplicate")
                                 .font(.body.bold())
                                 .padding([.top, .bottom], 15)
                             
-                            .frame(width: geometry.size.width * 0.45)
+                                .frame(width: geometry.size.width * 0.45)
                                 .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
                                 .background(.quinary)
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
@@ -75,11 +75,11 @@ struct EditListView: View {
                             path = NavigationPath()
                             
                         } label: {
-                            Text("Delete")
+                            Text("\(Image(systemName: "trash")) Delete")
                                 .font(.body.bold())
                                 .padding([.top, .bottom], 15)
                             
-                            .frame(width: geometry.size.width * 0.45)
+                                .frame(width: geometry.size.width * 0.45)
                                 .foregroundStyle(.red)
                                 .background(.quinary)
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
@@ -109,12 +109,8 @@ struct EditListView: View {
                     itemToEdit = newItem
                 } label: {
                     VStack(alignment: .leading) {
-                        HStack {
-                            Image(systemName: "plus.circle")
-                            Text("Add Item")
-                                .font(.system(size: 18, weight: .bold))
-                            
-                        }
+                        Text("\(Image(systemName: "plus.circle")) Add Item")
+                            .font(.system(size: 18, weight: .bold))
                         
                         RoundedRectangle(cornerRadius: 10)
                             .fill(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
@@ -167,15 +163,15 @@ struct EditListView: View {
                             (categoryFilter == "Any" || $0.category?.name ?? "Any" == categoryFilter)
                             && (bagFilter == "Any" || $0.bag?.name ?? "Any" == bagFilter)
                         })) { item in
-                        Button {
-                            itemToEdit = item
-                        } label: {
-                            ItemComponent(item: item)
+                            Button {
+                                itemToEdit = item
+                            } label: {
+                                ItemComponent(item: item)
+                            }
+                            .buttonStyle(.plain)
+                            .padding(.top, 10)
+                            .padding([.leading, .trailing], 15)
                         }
-                        .buttonStyle(.plain)
-                        .padding(.top, 10)
-                        .padding([.leading, .trailing], 15)
-                    }
                 }
                 
             }

@@ -9,19 +9,12 @@ import SwiftData
 
 @Model
 class Category {
+    
     var name: String
+    var inEditMode: Bool = false
     
     init(name: String) {
         self.name = name
     }
     
-    func equals(_ other: Category?) -> Bool {
-        var result = false
-        
-        if let otherCat = other {
-            result = name == otherCat.name
-        }
-        
-        return result
-    }
 }

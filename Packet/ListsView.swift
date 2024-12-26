@@ -25,12 +25,8 @@ struct ListsView: View {
                         modelContext.insert(newList)
                     } label: {
                         VStack(alignment: .leading) {
-                            HStack {
-                                Image(systemName: "plus.circle")
-                                Text("New List")
-                                    .font(.system(size: 18, weight: .bold))
-                                
-                            }
+                            Text("\(Image(systemName: "plus.circle")) Add List")
+                                .font(.system(size: 18, weight: .bold))
                             
                             RoundedRectangle(cornerRadius: 10)
                                 .fill(.green)
@@ -51,11 +47,11 @@ struct ListsView: View {
                                 path.append(list)
                             } label: {
                                 ZStack(alignment: .init(horizontal: .leading, vertical: .top)) {
-                                        Rectangle()
-                                            .fill(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
-                                            .frame(width: geometry.size.width, height: geometry.size.height * 0.15)
-                                            
-                                            .padding(0)
+                                    Rectangle()
+                                        .fill(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
+                                        .frame(width: geometry.size.width, height: geometry.size.height * 0.15)
+                                    
+                                        .padding(0)
                                     
                                     
                                     
@@ -66,7 +62,7 @@ struct ListsView: View {
                                         Spacer()
                                         
                                         Image(systemName: "chevron.right")
-                                        
+                                            .font(.system(size: 24, weight: .heavy))
                                             .padding(.trailing, 15)
                                             .buttonStyle(.plain)
                                     }

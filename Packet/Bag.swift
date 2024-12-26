@@ -15,13 +15,4 @@ class Bag {
         self.name = name
     }
     
-    func equals(_ other: Bag?) -> Bool {
-        var result = false
-        
-        if let otherBag = other {
-            result = otherBag.name == name
-        }
-        
-        return result
-    }
 }

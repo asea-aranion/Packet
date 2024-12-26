@@ -31,7 +31,7 @@ struct ContentView: View {
             }
             
             Tab(value: 3) {
-                
+                PreferencesView()
             } label: {
                 Image(systemName: "person.fill")
                 Text("Preferences")
