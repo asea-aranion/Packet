@@ -27,14 +27,14 @@ struct PreferencesView: View {
                     .foregroundStyle(.white)
                     .padding([.leading, .trailing], 30)
                     .padding([.top, .bottom], 15)
-                    .background((ColorScheme(rawValue: theme) ?? .blue).get2())
+                    .background((Theme(rawValue: theme) ?? .blue).get2())
                     .clipShape(UnevenRoundedRectangle(cornerRadii:
                             .init(topLeading: 10, bottomLeading: 0, bottomTrailing: 0, topTrailing: 10)))
                     .padding(.leading, 15)
                     .padding(.top, 20)
                 
                 HStack {
-                        ForEach(ColorScheme.allCases, id: \.self) { color in
+                        ForEach(Theme.allCases, id: \.self) { color in
                             Button {
                                 UserDefaults.standard.set(color.rawValue, forKey: "theme")
                             } label: {
@@ -61,7 +61,7 @@ struct PreferencesView: View {
                     .foregroundStyle(.white)
                     .padding([.leading, .trailing], 30)
                     .padding([.top, .bottom], 15)
-                    .background((ColorScheme(rawValue: theme) ?? .blue).get2())
+                    .background((Theme(rawValue: theme) ?? .blue).get2())
                     .clipShape(UnevenRoundedRectangle(cornerRadii:
                             .init(topLeading: 10, bottomLeading: 0, bottomTrailing: 0, topTrailing: 10)))
                     .padding(.leading, 15)
@@ -69,6 +69,7 @@ struct PreferencesView: View {
                 
                 Button {
                     modelContext.insert(Category(name: "New Category"))
+                        
                 } label: {
                     VStack(alignment: .leading) {
                         
@@ -76,7 +77,7 @@ struct PreferencesView: View {
                                 .font(.system(size: 18, weight: .bold))
                         
                         RoundedRectangle(cornerRadius: 10)
-                            .fill((ColorScheme(rawValue: theme) ?? .blue).get2())
+                            .fill((Theme(rawValue: theme) ?? .blue).get2())
                             .frame(height: 8)
                         
                     }
@@ -86,14 +87,53 @@ struct PreferencesView: View {
                     .padding([.leading, .trailing], 15)
                 }
                 .buttonStyle(.plain)
-                .foregroundStyle((ColorScheme(rawValue: theme) ?? .blue).get2())
+                .foregroundStyle((Theme(rawValue: theme) ?? .blue).get2())
                 
                 ForEach(categories.sorted(by: {$0.name < $1.name})) { category in
                     CategoryEditComponent(category: category)
                 }
-                .padding([.leading, .trailing], 15)
+                .padding(.horizontal, 15)
+                
+                // bag editor
+                Text("Bags")
+                    .font(.system(size: 20, weight: .bold))
+                    .foregroundStyle(.white)
+                    .padding([.leading, .trailing], 30)
+                    .padding([.top, .bottom], 15)
+                    .background((Theme(rawValue: theme) ?? .blue).get2())
+                    .clipShape(UnevenRoundedRectangle(cornerRadii:
+                            .init(topLeading: 10, bottomLeading: 0, bottomTrailing: 0, topTrailing: 10)))
+                    .padding(.leading, 15)
+                    .padding(.top, 20)
+                
+                Button {
+                    modelContext.insert(Bag(name: "New Bag"))
+                        
+                } label: {
+                    VStack(alignment: .leading) {
+                        
+                            Text("\(Image(systemName: "plus.circle")) Add Bag")
+                                .font(.system(size: 18, weight: .bold))
+                        
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill((Theme(rawValue: theme) ?? .blue).get2())
+                            .frame(height: 8)
+                        
+                    }
+                    
+                    .frame(height: 60)
+                    .padding(.top, 10)
+                    .padding([.leading, .trailing], 15)
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle((Theme(rawValue: theme) ?? .blue).get2())
+                
+                ForEach(bags.sorted(by: {$0.name < $1.name})) { bag in
+                    BagEditComponent(bag: bag)
+                }
+                .padding(.horizontal, 15)
             }
         }
-        .background((ColorScheme(rawValue: theme) ?? .blue).get1())
+        //.background((Theme(rawValue: theme) ?? .blue).get1())
     }
 }

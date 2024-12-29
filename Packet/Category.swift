@@ -10,7 +10,7 @@ import SwiftData
 @Model
 class Category {
     
-    var name: String
+    var name: String = ""
     var inEditMode: Bool = false
     
     init(name: String) {

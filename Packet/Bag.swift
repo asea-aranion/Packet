@@ -9,7 +9,9 @@ import SwiftData
 
 @Model
 class Bag {
-    var name: String
+    
+    var name: String = ""
+    var inEditMode: Bool = false
     
     init(name: String) {
         self.name = name

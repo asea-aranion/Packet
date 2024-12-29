@@ -14,6 +14,8 @@ struct ContentView: View {
     
     @State var selectedTab = 2
     
+    @AppStorage("theme") var theme: Int = 0
+    
     var body: some View {
         TabView(selection: $selectedTab) {
             Tab(value: 1) {
@@ -37,6 +39,8 @@ struct ContentView: View {
                 Text("Preferences")
             }
         }
+        .toolbarBackground((Theme(rawValue: theme) ?? .blue).get1(), for: .tabBar)
+        .toolbarBackgroundVisibility(.visible, for: .tabBar)
         .tabViewStyle(.sidebarAdaptable)
     }
 }
