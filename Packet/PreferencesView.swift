@@ -134,6 +134,6 @@ struct PreferencesView: View {
                 .padding(.horizontal, 15)
             }
         }
-        //.background((Theme(rawValue: theme) ?? .blue).get1())
+        .background((Theme(rawValue: theme) ?? .blue).get1())
     }
 }

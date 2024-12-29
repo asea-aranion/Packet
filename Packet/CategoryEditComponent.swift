@@ -52,7 +52,6 @@ struct CategoryEditComponent: View {
                     Image(systemName: category.inEditMode ? "checkmark" : "pencil")
                         .font(.system(size: 20, weight: .heavy))
                         .padding(geometry.size.width * 0.04)
-                        .background(Color(UIColor.systemBackground))
                         .clipShape(Circle())
                         .foregroundStyle((Theme(rawValue: theme) ?? .blue).get2())
                         .frame(width: geometry.size.width * 0.2)
@@ -65,7 +64,6 @@ struct CategoryEditComponent: View {
                         .foregroundStyle(.red)
                         .font(.system(size: 20, weight: .heavy))
                         .padding(geometry.size.width * 0.04)
-                        .background(Color(UIColor.systemBackground))
                         .clipShape(Circle())
                         .frame(width: geometry.size.width * 0.2)
                 }
@@ -73,7 +71,7 @@ struct CategoryEditComponent: View {
             
         }
         .padding(10)
-        .background((Theme(rawValue: theme) ?? .blue).get1())
+        .background(Color("Background"))
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .frame(height: 80)
         .padding(.top, 10)

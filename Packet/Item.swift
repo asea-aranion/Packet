@@ -13,6 +13,7 @@ class Item {
     var name: String = "New Item"
     var usages: Int = 0
     var quantity: Int = 1
+    var checked: Bool = false
     @Relationship var bag: Bag?
     @Relationship var category: Category?
     

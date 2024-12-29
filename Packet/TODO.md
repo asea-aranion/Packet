@@ -1,7 +1,6 @@
 # Features + Bug Fixes To Come
 
 ## Views
-- Settings
 - Active list
 - Finish theme color palettes and implementation
 

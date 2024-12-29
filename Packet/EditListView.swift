@@ -93,8 +93,8 @@ struct EditListView: View {
                 
                 // view and edit list items
                 Text("Items")
+                    .foregroundStyle(.white)
                     .font(.system(size: 20, weight: .bold))
-                    .foregroundStyle(.background)
                     .padding([.leading, .trailing], 30)
                     .padding([.top, .bottom], 15)
                     .background(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
