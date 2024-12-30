@@ -15,7 +15,7 @@ struct EditItemView: View {
     @Query var categories: [Category]
     @Query var bags: [Bag]
     
-    @State var item: Item
+    @Bindable var item: Item
     
     var body: some View {
         ScrollView {
@@ -44,9 +44,25 @@ struct EditItemView: View {
                 GeometryReader { geometry in
                     HStack {
                         // category picker
-                        Picker("Category", selection: $item.category) {
+                        Menu {
+                            Button {
+                                item.category = nil
+                            } label: {
+                                Text("(No category)")
+                            }
                             ForEach(categories) { category in
-                                Text(category.name).tag(category)
+                                Button {
+                                    
+                                    item.category = category
+                                    
+                                } label: {
+                                    Text(category.name)
+                                }
+                            }
+                        } label: {
+                            HStack {
+                                Text(item.category?.name ?? "(No category)")
+                                Image(systemName: "chevron.down")
                             }
                         }
                         .padding(15)

@@ -13,7 +13,7 @@ struct BagEditComponent: View {
     
     @AppStorage("theme") var theme: Int = 0
     
-    @State var bag: Bag
+    @Bindable var bag: Bag
     
     var body: some View {
         

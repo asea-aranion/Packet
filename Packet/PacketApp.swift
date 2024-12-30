@@ -14,7 +14,7 @@ struct PacketApp: App {
         WindowGroup {
             ContentView()
         }
-        .modelContainer(for: List.self)
+        .modelContainer(for: PackingList.self)
         .modelContainer(for: Bag.self)
         .modelContainer(for: Category.self)
     }

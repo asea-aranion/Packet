@@ -19,7 +19,7 @@ struct ContentView: View {
     var body: some View {
         TabView(selection: $selectedTab) {
             Tab(value: 1) {
-                
+                ActiveListView()
             } label: {
                 Image(systemName: "checklist")
                 Text("Active List")

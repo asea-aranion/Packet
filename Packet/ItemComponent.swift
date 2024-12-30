@@ -36,7 +36,7 @@ struct ItemComponent: View {
         .frame(maxWidth: .infinity)
         .padding(10)
         .background(.quinary)
-        .clipShape(RoundedRectangle(cornerRadius: 15))
+        .clipShape(RoundedRectangle(cornerRadius: 10))
         
     }
 }

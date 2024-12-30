@@ -10,13 +10,13 @@ import SwiftData
 @MainActor
 struct Previewer {
     let container: ModelContainer
-    let list: List
+    let list: PackingList
     
     init() throws {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        container = try ModelContainer(for: List.self, configurations: config)
+        container = try ModelContainer(for: PackingList.self, configurations: config)
         
-        list = List()
+        list = PackingList()
         list.name = "Previewer List"
         
         let category = Category(name: "New category")

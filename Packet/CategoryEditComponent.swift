@@ -13,7 +13,7 @@ struct CategoryEditComponent: View {
     
     @AppStorage("theme") var theme: Int = 0
     
-    @State var category: Category
+    @Bindable var category: Category
     
     var body: some View {
         

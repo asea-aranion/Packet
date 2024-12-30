@@ -16,7 +16,7 @@ struct EditListView: View {
     @Query var categories: [Category]
     @Query var bags: [Bag]
     
-    @State var list: List
+    @Bindable var list: PackingList
     @State var selectedColor: Color = Color.blue
     @State var itemToEdit: Item?
     @State var categoryFilter: String = "Any"
@@ -39,6 +39,12 @@ struct EditListView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 10))
                     .padding(10)
                 
+                // toggle active
+                Toggle(isOn: $list.active, label: {
+                    Text("Active")
+                })
+                .padding(.horizontal, 15)
+                
                 // edit list color
                 ColorPicker("Accent color", selection: $selectedColor)
                     .onChange(of: selectedColor) {
@@ -54,7 +60,7 @@ struct EditListView: View {
                         
                         // duplicate button
                         Button {
-                            modelContext.insert(List.copy(from: list))
+                            modelContext.insert(PackingList.copy(from: list))
                             path = NavigationPath()
                             
                         } label: {

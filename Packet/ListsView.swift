@@ -12,7 +12,7 @@ struct ListsView: View {
     
     @Environment(\.modelContext) var modelContext
     
-    @Query var lists: [List]
+    @Query var lists: [PackingList]
     
     @State var path: NavigationPath = NavigationPath()
     
@@ -21,7 +21,7 @@ struct ListsView: View {
             ScrollView {
                 LazyVStack {
                     Button {
-                        let newList = List()
+                        let newList = PackingList()
                         modelContext.insert(newList)
                     } label: {
                         VStack(alignment: .leading) {
@@ -59,7 +59,7 @@ struct ListsView: View {
                                         Spacer()
                                         
                                         Image(systemName: "chevron.right")
-                                            .font(.system(size: 24, weight: .heavy))
+                                            .font(.system(size: 24, weight: .bold))
                                             .padding(.trailing, 15)
                                             .buttonStyle(.plain)
                                     }
@@ -78,7 +78,7 @@ struct ListsView: View {
                 
             }
             .navigationTitle("Packing Lists")
-            .navigationDestination(for: List.self) { list in
+            .navigationDestination(for: PackingList.self) { list in
                 EditListView(list: list, path: $path)
             }
         }
