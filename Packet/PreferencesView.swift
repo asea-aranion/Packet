@@ -24,7 +24,7 @@ struct PreferencesView: View {
                 // theme picker
                 Text("Theme")
                     .font(.system(size: 20, weight: .bold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle((Theme(rawValue: theme) ?? .blue).get1())
                     .padding([.leading, .trailing], 30)
                     .padding([.top, .bottom], 15)
                     .background((Theme(rawValue: theme) ?? .blue).get2())
@@ -46,7 +46,7 @@ struct PreferencesView: View {
                                         .fill(color.get2())
                                     if (theme == color.rawValue) {
                                         Circle()
-                                            .stroke(Color.white, lineWidth: 4)
+                                            .stroke(.white, lineWidth: 4)
                                     }
                                 }
                             }
@@ -58,7 +58,7 @@ struct PreferencesView: View {
                 // category editor
                 Text("Categories")
                     .font(.system(size: 20, weight: .bold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle((Theme(rawValue: theme) ?? .blue).get1())
                     .padding([.leading, .trailing], 30)
                     .padding([.top, .bottom], 15)
                     .background((Theme(rawValue: theme) ?? .blue).get2())
@@ -97,7 +97,7 @@ struct PreferencesView: View {
                 // bag editor
                 Text("Bags")
                     .font(.system(size: 20, weight: .bold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle((Theme(rawValue: theme) ?? .blue).get1())
                     .padding([.leading, .trailing], 30)
                     .padding([.top, .bottom], 15)
                     .background((Theme(rawValue: theme) ?? .blue).get2())
@@ -133,7 +133,9 @@ struct PreferencesView: View {
                 }
                 .padding(.horizontal, 15)
             }
+            .padding(.bottom, 15)
         }
         .background((Theme(rawValue: theme) ?? .blue).get1())
+        .tint((Theme(rawValue: theme) ?? .blue).get2())
     }
 }

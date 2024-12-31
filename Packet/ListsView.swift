@@ -16,6 +16,8 @@ struct ListsView: View {
     
     @State var path: NavigationPath = NavigationPath()
     
+    @AppStorage("theme") var theme: Int = 0
+    
     var body: some View {
         NavigationStack(path: $path) {
             ScrollView {
@@ -29,7 +31,7 @@ struct ListsView: View {
                                 .font(.system(size: 18, weight: .bold))
                             
                             RoundedRectangle(cornerRadius: 10)
-                                .fill(.green)
+                                .fill((Theme(rawValue: theme) ?? .blue).get2())
                                 .frame(height: 8)
                             
                         }
@@ -39,48 +41,20 @@ struct ListsView: View {
                         .padding([.leading, .trailing], 15)
                     }
                     .buttonStyle(.plain)
-                    .foregroundStyle(.green)
+                    .foregroundStyle((Theme(rawValue: theme) ?? .blue).get2())
                     
                     ForEach(lists) { list in
-                        GeometryReader { geometry in
-                            Button {
-                                path.append(list)
-                            } label: {
-                                ZStack(alignment: .init(horizontal: .leading, vertical: .top)) {
-                                    Rectangle()
-                                        .fill(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
-                                        .frame(width: geometry.size.width, height: geometry.size.height * 0.15)
-                                        .padding(0)
-                                    
-                                    HStack(alignment: .center) {
-                                        Text(list.name)
-                                            .font(.system(size: 20, weight: .bold))
-                                            .padding(.leading, 15)
-                                        Spacer()
-                                        
-                                        Image(systemName: "chevron.right")
-                                            .font(.system(size: 24, weight: .bold))
-                                            .padding(.trailing, 15)
-                                            .buttonStyle(.plain)
-                                    }
-                                    .frame(height: geometry.size.height)
-                                }
-                            }
-                            .buttonStyle(.plain)
-                        }
-                        .background(.quinary)
-                        .frame(height: 80)
-                        .clipShape(RoundedRectangle(cornerSize: .init(width: 10, height: 10)))
-                        .padding(15)
-                        
+                        ListComponent(list: list, path: $path)
                     }
                 }
+                .padding(.bottom, 15)
                 
             }
             .navigationTitle("Packing Lists")
             .navigationDestination(for: PackingList.self) { list in
                 EditListView(list: list, path: $path)
             }
+            .background((Theme(rawValue: theme) ?? .blue).get1())
         }
     }
 }

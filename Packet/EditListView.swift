@@ -22,6 +22,8 @@ struct EditListView: View {
     @State var categoryFilter: String = "Any"
     @State var bagFilter: String = "Any"
     
+    @AppStorage("theme") var theme: Int = 0
+    
     @Binding var path: NavigationPath
     
     var body: some View {
@@ -29,31 +31,78 @@ struct EditListView: View {
             VStack(alignment: .leading) {
                 
                 // edit list name
-                TextField("", text: $list.name)
+                TextField("Packing list name", text: $list.name)
                     .multilineTextAlignment(.center)
+                    .textFieldStyle(.plain)
                     .font(.system(size: 24, weight: .bold))
-                    .padding(15)
+                    .padding(5)
+                    .background((Theme(rawValue: theme) ?? .blue).get1())
+                    .clipShape(RoundedRectangle(cornerRadius: 6))
                     .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
-                    .textFieldStyle(.roundedBorder)
+                    .padding(15)
                     .background(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
                     .clipShape(RoundedRectangle(cornerRadius: 10))
-                    .padding(10)
+                    .padding(15)
                 
-                // toggle active
-                Toggle(isOn: $list.active, label: {
-                    Text("Active")
-                })
-                .padding(.horizontal, 15)
-                
-                // edit list color
-                ColorPicker("Accent color", selection: $selectedColor)
-                    .onChange(of: selectedColor) {
-                        list.colorRed = Double(selectedColor.resolve(in: environment).red)
-                        list.colorGreen = Double(selectedColor.resolve(in: environment).green)
-                        list.colorBlue = Double(selectedColor.resolve(in: environment).blue)
+                GeometryReader { geometry in
+                    HStack(spacing: geometry.size.width * 0.1) {
+                        // toggle active
+                        Button {
+                            withAnimation(.easeInOut(duration: 0.1)) {
+                                list.active.toggle()
+                            }
+                        } label: {
+                            Text(list.active ?
+                                "\(Image(systemName: "checkmark")) Active" :
+                                "\(Image(systemName: "xmark")) Inactive")
+                                .bold()
+                                .padding(5)
+                                .frame(width: geometry.size.width * 0.35)
+                                .background(list.active ?
+                                            Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue) :
+                                            .clear)
+                                .foregroundStyle(list.active ?
+                                                 (Theme(rawValue: theme) ?? .blue).get1() :
+                                                 Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
+                                .clipShape(RoundedRectangle(cornerRadius: 6))
+                        }
+                        .padding(.vertical, 15)
+                        .frame(width: geometry.size.width * 0.45)
+                        .background(.quinary)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        
+                        // edit list color
+                        ColorPicker("\(Image(systemName: "paintbrush")) Color", selection: $selectedColor)
+                            .onChange(of: selectedColor) {
+                                list.colorRed = Double(selectedColor.resolve(in: environment).red)
+                                list.colorGreen = Double(selectedColor.resolve(in: environment).green)
+                                list.colorBlue = Double(selectedColor.resolve(in: environment).blue)
+                            }
+                            .padding(15)
+                            .frame(width: geometry.size.width * 0.45)
+                            .background(.quinary)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
                     }
-                    .padding(10)
-                    .padding([.leading, .trailing], 15)
+                }
+                .frame(minHeight: 60)
+                .padding(.horizontal, 15)
+                .padding(.bottom, 15)
+                
+                // edit start date
+                DatePicker("\(Image(systemName: "calendar")) Departure date", selection: $list.startDate, displayedComponents: .date)
+                    .padding(15)
+                    .background(.quinary)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .padding(.vertical, 10)
+                    .padding(.horizontal, 15)
+                
+                // edit end date
+                DatePicker("\(Image(systemName: "calendar")) Return date", selection: $list.endDate, displayedComponents: .date)
+                    .padding(15)
+                    .background(.quinary)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .padding(.vertical, 10)
+                    .padding(.horizontal, 15)
                 
                 GeometryReader { geometry in
                     HStack(spacing: geometry.size.width * 0.1) {
@@ -95,11 +144,12 @@ struct EditListView: View {
                     }
                 }
                 .frame(minHeight: 60)
-                .padding([.leading, .trailing], 15)
+                .padding(.horizontal, 15)
+                .padding(.top, 15)
                 
                 // view and edit list items
                 Text("Items")
-                    .foregroundStyle(.white)
+                    .foregroundStyle((Theme(rawValue: theme) ?? .blue).get1())
                     .font(.system(size: 20, weight: .bold))
                     .padding([.leading, .trailing], 30)
                     .padding([.top, .bottom], 15)
@@ -181,6 +231,7 @@ struct EditListView: View {
                 }
                 
             }
+            .padding(.bottom, 15)
         }
         .onAppear {
             selectedColor = Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue)
@@ -188,5 +239,7 @@ struct EditListView: View {
         .popover(item: $itemToEdit) { data in
             EditItemView(item: data)
         }
+        .background((Theme(rawValue: theme) ?? .blue).get1())
+        .tint(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
     }
 }

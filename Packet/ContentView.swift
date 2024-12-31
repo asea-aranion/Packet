@@ -22,7 +22,7 @@ struct ContentView: View {
                 ActiveListView()
             } label: {
                 Image(systemName: "checklist")
-                Text("Active List")
+                Text("Active Lists")
             }
             
             Tab(value: 2) {
@@ -42,6 +42,7 @@ struct ContentView: View {
         .toolbarBackground((Theme(rawValue: theme) ?? .blue).get1(), for: .tabBar)
         .toolbarBackgroundVisibility(.visible, for: .tabBar)
         .tabViewStyle(.sidebarAdaptable)
+        .tint((Theme(rawValue: theme) ?? .blue).get2())
     }
 }
 

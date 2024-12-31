@@ -2,12 +2,10 @@
 
 ## Views
 - Finish theme color palettes and implementation
-- In active view -- don't show category/bag header if list has no items in it
 
 ## Lists
-- Dates, sort lists in chronological order
+- Sort lists in chronological order
 - Locations (map?)
-- Trip length editor
 - Convert all pickers to menus with (No category/bag) option
 
 ## Categories

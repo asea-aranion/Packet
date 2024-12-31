@@ -12,15 +12,45 @@ import SwiftUI
 class PackingList {
     
     var name: String = "New Packing List"
-    var colorRed: Double = 0.5
-    var colorGreen: Double = 0.5
-    var colorBlue: Double = 0.5
+    var colorRed: Double = 0.8
+    var colorGreen: Double = 0.9
+    var colorBlue: Double = 0.8
     @Relationship(deleteRule: .cascade) var items: [Item]?
     var tripLength: Int = 1
     var active: Bool = false
+    var startDate: Date = Date()
+    var endDate: Date = Date()
     
     init() {
         items = [Item]()
+    }
+    
+    func hasCategory(category: Category) -> Bool {
+        
+        guard let items else { return false }
+        
+        return items.contains(where: { $0.category == category })
+    }
+    
+    func hasNilCategory() -> Bool {
+        
+        guard let items else { return false }
+        
+        return items.contains(where: { $0.category == nil })
+    }
+    
+    func hasBag(bag: Bag) -> Bool {
+        
+        guard let items else { return false }
+        
+        return items.contains(where: { $0.bag == bag })
+    }
+    
+    func hasNilBag() -> Bool {
+        
+        guard let items else { return false }
+        
+        return items.contains(where: { $0.bag == nil })
     }
     
     static func copy(from source: PackingList) -> PackingList {

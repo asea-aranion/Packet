@@ -21,33 +21,37 @@ struct CategoryEditComponent: View {
             
             HStack(spacing: 0) {
                 
-                if (category.inEditMode) {
-                    VStack(spacing: 0) {
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(.clear)
-                            .frame(height: 5)
+                VStack(spacing: 0) {
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(.clear)
+                        .frame(height: 5)
+                    
+                    if (category.inEditMode) {
                         TextField("Category name", text: $category.name)
                             .font(.system(size: 18, weight: .bold))
                             .multilineTextAlignment(.leading)
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill((Theme(rawValue: theme) ?? .blue).get2())
-                            .frame(height: 5)
-                        
                     }
-                    .padding(.horizontal, 15)
-                    .frame(width: geometry.size.width * 0.6)
+                    else {
+                        Text(category.name)
+                            .font(.system(size: 18, weight: .bold))
+                            .multilineTextAlignment(.leading)
+                            .padding(.leading, 15)
+                            .frame(width: geometry.size.width * 0.6, alignment: .leading)
+                    }
+                    
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill((Theme(rawValue: theme) ?? .blue).get2())
+                        .frame(height: 5)
+                        .frame(maxWidth: category.inEditMode ? .infinity : 0)
                 }
-                else {
-                    Text(category.name)
-                        .font(.system(size: 18, weight: .bold))
-                        .multilineTextAlignment(.leading)
-                        .padding(.leading, 15)
-                        .frame(width: geometry.size.width * 0.6, alignment: .leading)
-                }
+                .padding(.horizontal, 15)
+                .frame(width: geometry.size.width * 0.6)
                 
                 
                 Button {
-                    category.inEditMode.toggle()
+                    withAnimation(.easeInOut) {
+                        category.inEditMode.toggle()
+                    }
                 } label: {
                     Image(systemName: category.inEditMode ? "checkmark" : "pencil")
                         .font(.system(size: 20, weight: .heavy))
@@ -71,7 +75,7 @@ struct CategoryEditComponent: View {
             
         }
         .padding(10)
-        .background(Color("Background"))
+        .background(.quinary)
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .frame(height: 80)
         .padding(.top, 10)

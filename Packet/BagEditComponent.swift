@@ -20,34 +20,39 @@ struct BagEditComponent: View {
         GeometryReader { geometry in
             
             HStack(spacing: 0) {
-                
-                if (bag.inEditMode) {
-                    VStack(spacing: 0) {
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(.clear)
-                            .frame(height: 5)
+                VStack(spacing: 0) {
+                    
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(.clear)
+                        .frame(height: 5)
+                    
+                    if (bag.inEditMode) {
                         TextField("Category name", text: $bag.name)
                             .font(.system(size: 18, weight: .bold))
                             .multilineTextAlignment(.leading)
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill((Theme(rawValue: theme) ?? .blue).get2())
-                            .frame(height: 5)
-                        
                     }
-                    .padding(.horizontal, 15)
-                    .frame(width: geometry.size.width * 0.6)
+                    else {
+                        Text(bag.name)
+                            .font(.system(size: 18, weight: .bold))
+                            .multilineTextAlignment(.leading)
+                            .padding(.leading, 15)
+                            .frame(width: geometry.size.width * 0.6, alignment: .leading)
+                    }
+                    
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill((Theme(rawValue: theme) ?? .blue).get2())
+                        .frame(height: 5)
+                        .frame(maxWidth: bag.inEditMode ? .infinity : 0)
+                    
                 }
-                else {
-                    Text(bag.name)
-                        .font(.system(size: 18, weight: .bold))
-                        .multilineTextAlignment(.leading)
-                        .padding(.leading, 15)
-                        .frame(width: geometry.size.width * 0.6, alignment: .leading)
-                }
+                .padding(.horizontal, 15)
+                .frame(width: geometry.size.width * 0.6)
                 
                 
                 Button {
-                    bag.inEditMode.toggle()
+                    withAnimation(.easeInOut) {
+                        bag.inEditMode.toggle()
+                    }
                 } label: {
                     Image(systemName: bag.inEditMode ? "checkmark" : "pencil")
                         .font(.system(size: 20, weight: .heavy))
@@ -70,7 +75,7 @@ struct BagEditComponent: View {
             }
         }
         .padding(10)
-        .background(Color("Background"))
+        .background(.quinary)
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .frame(height: 80)
         .padding(.top, 10)
