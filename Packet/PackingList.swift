@@ -25,6 +25,17 @@ class PackingList {
         items = [Item]()
     }
     
+    func uniqueItemNames() -> Set<String> {
+        
+        var result: Set<String> = []
+        
+        guard let items else { return result }
+        
+        items.forEach { result.insert($0.name) }
+        
+        return result
+    }
+    
     func hasCategory(category: Category) -> Bool {
         
         guard let items else { return false }

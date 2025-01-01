@@ -2,6 +2,7 @@
 
 ## Views
 - Finish theme color palettes and implementation
+- ActiveListView -- save selected list and display on app launch
 
 ## Lists
 - Sort lists in chronological order
