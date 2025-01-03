@@ -19,8 +19,10 @@ struct EditListView: View {
     @Bindable var list: PackingList
     @State var selectedColor: Color = Color.blue
     @State var itemToEdit: Item?
-    @State var categoryFilter: String = "Any"
-    @State var bagFilter: String = "Any"
+    @State var categoryFilter: Category? = nil
+    @State var bagFilter: Bag? = nil
+    @State var ignoreCategory: Bool = true
+    @State var ignoreBag: Bool = true
     
     @AppStorage("theme") var theme: Int = 0
     
@@ -44,108 +46,106 @@ struct EditListView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 10))
                     .padding(15)
                 
-                GeometryReader { geometry in
-                    HStack(spacing: geometry.size.width * 0.1) {
-                        // toggle active
-                        Button {
-                            withAnimation(.easeInOut(duration: 0.1)) {
-                                list.active.toggle()
-                            }
-                        } label: {
-                            Text(list.active ?
-                                "\(Image(systemName: "checkmark")) Active" :
-                                "\(Image(systemName: "xmark")) Inactive")
-                                .bold()
-                                .padding(5)
-                                .frame(width: geometry.size.width * 0.35)
-                                .background(list.active ?
-                                            Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue) :
-                                            .clear)
-                                .foregroundStyle(list.active ?
-                                                 (Theme(rawValue: theme) ?? .blue).get1() :
-                                                 Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
-                                .clipShape(RoundedRectangle(cornerRadius: 6))
+                HStack(spacing: 15) {
+                    // toggle active
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.1)) {
+                            list.active.toggle()
                         }
-                        .padding(.vertical, 15)
-                        .frame(width: geometry.size.width * 0.45)
+                    } label: {
+                        Text(list.active ?
+                             "\(Image(systemName: "checkmark")) Active" :
+                                "\(Image(systemName: "xmark")) Inactive")
+                        .bold()
+                        .padding(.vertical, 10)
+                        .padding(.horizontal, 20)
+                        .background(list.active ?
+                                    Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue) :
+                                .clear)
+                        .foregroundStyle(list.active ?
+                                         (Theme(rawValue: theme) ?? .blue).get1() :
+                                            Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
+                        .clipShape(RoundedRectangle(cornerRadius: 6))
+                    }
+                    .frame(maxWidth: .infinity, minHeight: 60)
+                    .background(.quinary)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    
+                    // edit list color
+                    ColorPicker("\(Image(systemName: "paintbrush")) Color", selection: $selectedColor)
+                        .onChange(of: selectedColor) {
+                            list.colorRed = Double(selectedColor.resolve(in: environment).red)
+                            list.colorGreen = Double(selectedColor.resolve(in: environment).green)
+                            list.colorBlue = Double(selectedColor.resolve(in: environment).blue)
+                        }
+                        .padding(15)
+                        .frame(maxWidth: .infinity, minHeight: 60)
                         .background(.quinary)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
+                }
+                .frame(minHeight: 60)
+                .padding(.horizontal, 15)
+                .padding(.bottom, 10)
+                
+                // edit start date
+                DatePicker("\(Image(systemName: "calendar")) Departure date", selection: $list.startDate,
+                           in: Date.distantPast...list.endDate, displayedComponents: .date)
+                .padding(15)
+                .background(.quinary)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .padding(.bottom, 10)
+                .padding(.horizontal, 15)
+                
+                // edit end date
+                DatePicker("\(Image(systemName: "calendar")) Return date", selection: $list.endDate,
+                           in: list.startDate...Date.distantFuture, displayedComponents: .date)
+                .padding(15)
+                .background(.quinary)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .padding(.bottom, 10)
+                .padding(.horizontal, 15)
+                
+                HStack(spacing: 15) {
+                    
+                    // duplicate button
+                    Button {
+                        modelContext.insert(PackingList.copy(from: list))
+                        path = NavigationPath()
                         
-                        // edit list color
-                        ColorPicker("\(Image(systemName: "paintbrush")) Color", selection: $selectedColor)
-                            .onChange(of: selectedColor) {
-                                list.colorRed = Double(selectedColor.resolve(in: environment).red)
-                                list.colorGreen = Double(selectedColor.resolve(in: environment).green)
-                                list.colorBlue = Double(selectedColor.resolve(in: environment).blue)
-                            }
-                            .padding(15)
-                            .frame(width: geometry.size.width * 0.45)
+                    } label: {
+                        Text("\(Image(systemName: "square.on.square")) Duplicate")
+                            .font(.body.bold())
+                            .padding([.top, .bottom], 15)
+                        
+                            .frame(maxWidth: .infinity)
+                            .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
                             .background(.quinary)
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                     }
-                }
-                .frame(minHeight: 60)
-                .padding(.horizontal, 15)
-                .padding(.bottom, 15)
-                
-                // edit start date
-                DatePicker("\(Image(systemName: "calendar")) Departure date", selection: $list.startDate, displayedComponents: .date)
-                    .padding(15)
-                    .background(.quinary)
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                    .padding(.vertical, 10)
-                    .padding(.horizontal, 15)
-                
-                // edit end date
-                DatePicker("\(Image(systemName: "calendar")) Return date", selection: $list.endDate, displayedComponents: .date)
-                    .padding(15)
-                    .background(.quinary)
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                    .padding(.vertical, 10)
-                    .padding(.horizontal, 15)
-                
-                GeometryReader { geometry in
-                    HStack(spacing: geometry.size.width * 0.1) {
+                    .buttonStyle(.plain)
+                    
+                    // delete button
+                    Button {
+                        modelContext.delete(list)
+                        path = NavigationPath()
                         
-                        // duplicate button
-                        Button {
-                            modelContext.insert(PackingList.copy(from: list))
-                            path = NavigationPath()
-                            
-                        } label: {
-                            Text("\(Image(systemName: "square.on.square")) Duplicate")
-                                .font(.body.bold())
-                                .padding([.top, .bottom], 15)
-                            
-                                .frame(width: geometry.size.width * 0.45)
-                                .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
-                                .background(.quinary)
-                                .clipShape(RoundedRectangle(cornerRadius: 10))
-                        }
-                        .buttonStyle(.plain)
+                    } label: {
+                        Text("\(Image(systemName: "trash")) Delete")
+                            .font(.body.bold())
+                            .padding([.top, .bottom], 15)
                         
-                        // delete button
-                        Button {
-                            modelContext.delete(list)
-                            path = NavigationPath()
-                            
-                        } label: {
-                            Text("\(Image(systemName: "trash")) Delete")
-                                .font(.body.bold())
-                                .padding([.top, .bottom], 15)
-                            
-                                .frame(width: geometry.size.width * 0.45)
-                                .foregroundStyle(.red)
-                                .background(.quinary)
-                                .clipShape(RoundedRectangle(cornerRadius: 10))
-                        }
-                        .buttonStyle(.plain)
-                        
+                            .frame(maxWidth: .infinity)
+                            .foregroundStyle(.red)
+                            .background(.quinary)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
                     }
+                    .buttonStyle(.plain)
+                    
                 }
+                
                 .frame(minHeight: 60)
                 .padding(.horizontal, 15)
-                .padding(.top, 15)
+                .padding(.bottom, 10)
                 
                 // view and edit list items
                 Text("Items")
@@ -182,42 +182,64 @@ struct EditListView: View {
                 .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
                 
                 // item filters
-                GeometryReader { geometry in
-                    HStack(spacing: geometry.size.width * 0.1) {
+                    HStack(spacing: 15) {
                         // category picker
-                        Picker("Filter by category", selection: $categoryFilter) {
-                            Text("Any").tag("Any")
-                            ForEach(categories) { category in
-                                Text(category.name).tag(category.name)
+                        Menu {
+                            Button("Any") {
+                                ignoreCategory = true
                             }
+                            Button("(No category)") {
+                                ignoreCategory = false
+                                categoryFilter = nil
+                            }
+                            ForEach(categories) { category in
+                                Button(category.name) {
+                                    ignoreCategory = false
+                                    categoryFilter = category
+                                }
+                            }
+                        } label: {
+                            Text("\(Image(systemName: "list.clipboard")) \(ignoreCategory ? "Any" : (categoryFilter?.name ?? "(No category)")) \(Image(systemName: "chevron.down"))")
                         }
-                        .padding([.top, .bottom], 15)
-                        .frame(width: geometry.size.width * 0.45)
+                        .padding(.vertical, 20)
+                        .frame(maxWidth: .infinity)
                         .background(.quinary)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                         
                         // bag picker
-                        Picker("Filter by bag", selection: $bagFilter) {
-                            Text("Any").tag("Any")
-                            ForEach(bags) { bag in
-                                Text(bag.name).tag(bag.name)
+                        Menu {
+                            Button("Any") {
+                                ignoreBag = true
                             }
+                            Button("(No bag)") {
+                                ignoreBag = false
+                                bagFilter = nil
+                            }
+                            ForEach(bags) { bag in
+                                Button(bag.name) {
+                                    ignoreBag = false
+                                    bagFilter = bag
+                                }
+                            }
+                        } label: {
+                            Text("\(Image(systemName: "bag")) \(ignoreBag ? "Any" : (bagFilter?.name ?? "(No bag)")) \(Image(systemName: "chevron.down"))")
                         }
-                        .padding([.top, .bottom], 15)
-                        .frame(width: geometry.size.width * 0.45)
+                        .padding(.vertical, 20)
+                        .frame(maxWidth: .infinity)
                         .background(.quinary)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                     }
-                }
+                
                 .frame(minHeight: 60)
-                .padding([.leading, .trailing], 15)
+                .padding(.horizontal, 15)
+                .padding(.bottom, 10)
                 
                 // items in list
                 VStack(alignment: .leading) {
                     ForEach((list.items ?? [])
                         .filter({
-                            (categoryFilter == "Any" || $0.category?.name ?? "Any" == categoryFilter)
-                            && (bagFilter == "Any" || $0.bag?.name ?? "Any" == bagFilter)
+                            (ignoreCategory || $0.category == categoryFilter)
+                            && (ignoreBag || $0.bag == bagFilter)
                         })) { item in
                             Button {
                                 itemToEdit = item
@@ -237,7 +259,7 @@ struct EditListView: View {
             selectedColor = Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue)
         }
         .popover(item: $itemToEdit) { data in
-            EditItemView(item: data)
+            EditItemView(item: data, duration: Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: list.startDate), to: Calendar.current.startOfDay(for: list.endDate)).day ?? 0)
         }
         .background((Theme(rawValue: theme) ?? .blue).get1())
         .tint(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))

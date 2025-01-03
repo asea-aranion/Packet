@@ -10,7 +10,9 @@ import SwiftData
 
 struct ActiveListView: View {
     
-    @Query(filter: #Predicate<PackingList> { list in list.active } ) var activeLists: [PackingList]
+    @Query(filter: #Predicate<PackingList> {
+        list in list.active
+    }, sort: \PackingList.startDate, order: .reverse) var activeLists: [PackingList]
     @Query var bags: [Bag]
     @Query var categories: [Category]
     
@@ -135,7 +137,7 @@ struct ActiveListView: View {
                                 // category grouping
                                 if (groupByCategory) {
                                     ForEach(categories.filter({
-                                        activeList?.hasCategory(category: $0) ?? false
+                                        activeList?.withNameHasCategory(category: $0, term: searchText) ?? false
                                     } )) { group in
                                         
                                         Text(group.name)
@@ -159,7 +161,7 @@ struct ActiveListView: View {
                                                         return false
                                                     }
                                                 })) { item in
-                                                    ActiveItemComponent(item: item, itemToEdit: $itemToEdit)
+                                                    ActiveItemComponent(item: item, itemToEdit: $itemToEdit, showCategory: false, listColor: Color(red: activeList?.colorRed ?? 0, green: activeList?.colorGreen ?? 0, blue: activeList?.colorBlue ?? 0))
                                                 }
                                                 .background(.quinary)
                                                 .clipShape(RoundedRectangle(cornerRadius: 10))
@@ -169,7 +171,7 @@ struct ActiveListView: View {
                                         
                                     }
                                     
-                                    if (activeList?.hasNilCategory() ?? false) {
+                                    if (activeList?.withNameHasNilCategory(term: searchText) ?? false) {
                                         
                                         Text("(No category)")
                                             .font(.system(size: 20, weight: .bold))
@@ -186,7 +188,7 @@ struct ActiveListView: View {
                                                 .filter({
                                                     (searchText.isEmpty || $0.name.localizedCaseInsensitiveContains(searchText)) && $0.category == nil
                                                 })) { item in
-                                                    ActiveItemComponent(item: item, itemToEdit: $itemToEdit)
+                                                    ActiveItemComponent(item: item, itemToEdit: $itemToEdit, showCategory: false, listColor: Color(red: activeList?.colorRed ?? 0, green: activeList?.colorGreen ?? 0, blue: activeList?.colorBlue ?? 0))
                                                 }
                                                 .background(.quinary)
                                                 .clipShape(RoundedRectangle(cornerRadius: 10))
@@ -199,7 +201,7 @@ struct ActiveListView: View {
                                 // bag grouping
                                 else {
                                     ForEach(bags.filter({
-                                        activeList?.hasBag(bag: $0) ?? false
+                                        activeList?.withNameHasBag(bag: $0, term: searchText) ?? false
                                     })) { group in
                                         
                                         Text(group.name)
@@ -223,7 +225,7 @@ struct ActiveListView: View {
                                                         return false
                                                     }
                                                 })) { item in
-                                                    ActiveItemComponent(item: item, itemToEdit: $itemToEdit)
+                                                    ActiveItemComponent(item: item, itemToEdit: $itemToEdit, showCategory: true, listColor: Color(red: activeList?.colorRed ?? 0, green: activeList?.colorGreen ?? 0, blue: activeList?.colorBlue ?? 0))
                                                 }
                                                 .background(.quinary)
                                                 .clipShape(RoundedRectangle(cornerRadius: 10))
@@ -233,7 +235,7 @@ struct ActiveListView: View {
                                         
                                     }
                                     
-                                    if (activeList?.hasNilBag() ?? false) {
+                                    if (activeList?.withNameHasNilBag(term: searchText) ?? false) {
                                         
                                         Text("(No bag)")
                                             .font(.system(size: 20, weight: .bold))
@@ -250,7 +252,7 @@ struct ActiveListView: View {
                                                 .filter({
                                                     (searchText.isEmpty || $0.name.localizedCaseInsensitiveContains(searchText)) && $0.bag == nil
                                                 })) { item in
-                                                    ActiveItemComponent(item: item, itemToEdit: $itemToEdit)
+                                                    ActiveItemComponent(item: item, itemToEdit: $itemToEdit, showCategory: true, listColor: Color(red: activeList?.colorRed ?? 0, green: activeList?.colorGreen ?? 0, blue: activeList?.colorBlue ?? 0))
                                                 }
                                                 .background(.quinary)
                                                 .clipShape(RoundedRectangle(cornerRadius: 10))

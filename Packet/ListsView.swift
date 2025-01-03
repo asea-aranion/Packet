@@ -12,7 +12,7 @@ struct ListsView: View {
     
     @Environment(\.modelContext) var modelContext
     
-    @Query var lists: [PackingList]
+    @Query(sort: \PackingList.startDate, order: .reverse) var lists: [PackingList]
     
     @State var path: NavigationPath = NavigationPath()
     

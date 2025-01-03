@@ -15,6 +15,7 @@ struct ActiveItemComponent: View {
     @AppStorage("theme") var theme: Int = 0
     
     var showCategory: Bool = false
+    var listColor: Color = .blue
     
     var body: some View {
         
@@ -25,7 +26,7 @@ struct ActiveItemComponent: View {
                 }
             } label: {
                 Image(systemName: item.checked ? "checkmark.circle" : "circle")
-                    .foregroundStyle((Theme(rawValue: theme) ?? .blue).get2())
+                    .foregroundStyle(listColor)
                     .font(.system(size: 24))
                     .padding(5)
                 
@@ -38,10 +39,14 @@ struct ActiveItemComponent: View {
                     .background(.quinary)
                     .clipShape(Circle())
                 Text(item.name)
-                    .padding(.leading, 3)
-                Image(systemName: "circle.fill")
-                    .font(.system(size: 8))
-                Text(item.bag?.name ?? "(No bag)")
+                    .padding(.horizontal, 3)
+                if (showCategory) {
+                    Text("\(Image(systemName: "list.clipboard")) \(item.category?.name ?? "(No category)")")
+                        .foregroundStyle((Theme(rawValue: theme) ?? .blue).get2())
+                } else {
+                    Text("\(Image(systemName: "bag")) \(item.bag?.name ?? "(No bag)")")
+                        .foregroundStyle((Theme(rawValue: theme) ?? .blue).get2())
+                }
                 Spacer()
             }
             

@@ -22,14 +22,11 @@ struct BagEditComponent: View {
             HStack(spacing: 0) {
                 VStack(spacing: 0) {
                     
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(.clear)
-                        .frame(height: 5)
-                    
                     if (bag.inEditMode) {
                         TextField("Category name", text: $bag.name)
                             .font(.system(size: 18, weight: .bold))
                             .multilineTextAlignment(.leading)
+                            .padding(.top, 5)
                     }
                     else {
                         Text(bag.name)
@@ -37,6 +34,7 @@ struct BagEditComponent: View {
                             .multilineTextAlignment(.leading)
                             .padding(.leading, 15)
                             .frame(width: geometry.size.width * 0.6, alignment: .leading)
+                            .padding(.top, 5)
                     }
                     
                     RoundedRectangle(cornerRadius: 10)

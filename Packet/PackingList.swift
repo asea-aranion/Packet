@@ -12,9 +12,9 @@ import SwiftUI
 class PackingList {
     
     var name: String = "New Packing List"
-    var colorRed: Double = 0.8
-    var colorGreen: Double = 0.9
-    var colorBlue: Double = 0.8
+    var colorRed: Double = 71 / 255
+    var colorGreen: Double = 159 / 255
+    var colorBlue: Double = 211 / 255
     @Relationship(deleteRule: .cascade) var items: [Item]?
     var tripLength: Int = 1
     var active: Bool = false
@@ -36,32 +36,40 @@ class PackingList {
         return result
     }
     
-    func hasCategory(category: Category) -> Bool {
+    func withNameHasCategory(category: Category, term: String) -> Bool {
         
         guard let items else { return false }
         
-        return items.contains(where: { $0.category == category })
+        return items.contains(where: {
+            (term.isEmpty || $0.name.localizedCaseInsensitiveContains(term)) && $0.category == category
+        })
     }
     
-    func hasNilCategory() -> Bool {
+    func withNameHasNilCategory(term: String) -> Bool {
         
         guard let items else { return false }
         
-        return items.contains(where: { $0.category == nil })
+        return items.contains(where: {
+            (term.isEmpty || $0.name.localizedCaseInsensitiveContains(term)) && $0.category == nil
+        })
     }
     
-    func hasBag(bag: Bag) -> Bool {
+    func withNameHasBag(bag: Bag, term: String) -> Bool {
         
         guard let items else { return false }
         
-        return items.contains(where: { $0.bag == bag })
+        return items.contains(where: {
+            (term.isEmpty || $0.name.localizedCaseInsensitiveContains(term)) && $0.bag == bag
+        })
     }
     
-    func hasNilBag() -> Bool {
+    func withNameHasNilBag(term: String) -> Bool {
         
         guard let items else { return false }
         
-        return items.contains(where: { $0.bag == nil })
+        return items.contains(where: {
+            (term.isEmpty || $0.name.localizedCaseInsensitiveContains(term)) && $0.bag == nil
+        })
     }
     
     static func copy(from source: PackingList) -> PackingList {

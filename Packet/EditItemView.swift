@@ -17,6 +17,8 @@ struct EditItemView: View {
     
     @Bindable var item: Item
     
+    var duration: Int = 0
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
@@ -38,8 +40,25 @@ struct EditItemView: View {
                     .textFieldStyle(.roundedBorder)
                     .background(.quinary)
                     .clipShape(RoundedRectangle(cornerRadius: 15))
-                    .padding([.leading, .trailing], 15)
-                    .padding([.top, .bottom], 10)
+                    .padding(.horizontal, 15)
+                    .padding(.vertical, 10)
+                
+                Stepper("Quantity", value: $item.quantity)
+                    .padding(.horizontal, 15)
+                    .padding(.vertical, 10)
+                
+                Button {
+                    item.quantity = duration
+                } label: {
+                    Text("Set to trip duration (\(duration) nights)")
+                }
+                
+                .padding(10)
+                .frame(maxWidth: .infinity)
+                .background(.quinary)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .padding(.horizontal, 15)
+                .padding(.vertical, 10)
                 
                 GeometryReader { geometry in
                     HStack {
@@ -71,9 +90,23 @@ struct EditItemView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                         
                         // bag picker
-                        Picker("Bag", selection: $item.bag) {
+                        Menu {
+                            Button {
+                                item.bag = nil
+                            } label: {
+                                Text("(No bag)")
+                            }
                             ForEach(bags) { bag in
-                                Text(bag.name).tag(bag)
+                                Button {
+                                    item.bag = bag
+                                } label: {
+                                    Text(bag.name)
+                                }
+                            }
+                        } label: {
+                            HStack {
+                                Text(item.bag?.name ?? "(No bag)")
+                                Image(systemName: "chevron.down")
                             }
                         }
                         .padding(15)

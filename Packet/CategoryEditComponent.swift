@@ -22,14 +22,12 @@ struct CategoryEditComponent: View {
             HStack(spacing: 0) {
                 
                 VStack(spacing: 0) {
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(.clear)
-                        .frame(height: 5)
                     
                     if (category.inEditMode) {
                         TextField("Category name", text: $category.name)
                             .font(.system(size: 18, weight: .bold))
                             .multilineTextAlignment(.leading)
+                            .padding(.top, 5)
                     }
                     else {
                         Text(category.name)
@@ -37,6 +35,7 @@ struct CategoryEditComponent: View {
                             .multilineTextAlignment(.leading)
                             .padding(.leading, 15)
                             .frame(width: geometry.size.width * 0.6, alignment: .leading)
+                            .padding(.top, 5)
                     }
                     
                     RoundedRectangle(cornerRadius: 10)
