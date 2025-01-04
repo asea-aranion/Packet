@@ -7,6 +7,7 @@
 
 import SwiftData
 import SwiftUI
+import CoreLocation
 
 @Model
 class PackingList {
@@ -20,6 +21,8 @@ class PackingList {
     var active: Bool = false
     var startDate: Date = Date()
     var endDate: Date = Date()
+    var long: Double = 0
+    var lat: Double = 0
     
     init() {
         items = [Item]()

@@ -35,17 +35,37 @@ struct EditItemView: View {
                 .padding(.trailing, 24)
                 
                 // name field
-                TextField("Name", text: $item.name)
-                    .padding(12)
-                    .textFieldStyle(.roundedBorder)
-                    .background(.quinary)
-                    .clipShape(RoundedRectangle(cornerRadius: 15))
-                    .padding(.horizontal, 15)
-                    .padding(.vertical, 10)
-                
-                Stepper("Quantity", value: $item.quantity)
-                    .padding(.horizontal, 15)
-                    .padding(.vertical, 10)
+                HStack {
+                    
+                    VStack(spacing: 0) {
+                        Button("+") {
+                            item.quantity += 1
+                        }
+                        .font(.system(size: 24, weight: .bold))
+                        .accessibilityHint("Adds 1 to quantity")
+                        Text(String(item.quantity))
+                            .bold()
+                            .padding(15)
+                            .background(.quinary)
+                            .clipShape(Circle())
+                        Button("-") {
+                            item.quantity -= 1
+                        }
+                        .font(.system(size: 24, weight: .bold))
+                        .accessibilityHint("Subtracts 1 from quantity")
+                        .disabled(item.quantity == 1)
+                    }
+                    .padding(.trailing, 5)
+                    
+                    TextField("Name", text: $item.name)
+                        .padding(12)
+                        .textFieldStyle(.roundedBorder)
+                        .background(.quinary)
+                        .clipShape(RoundedRectangle(cornerRadius: 15))
+                        
+                }
+                .padding(.horizontal, 15)
+                .padding(.vertical, 10)
                 
                 Button {
                     item.quantity = duration

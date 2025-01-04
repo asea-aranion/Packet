@@ -3,6 +3,7 @@
 ## Views
 - Finish theme color palettes and implementation
 - ActiveListView -- save selected list and display on app launch
+- Ensure font sizes change with dynamic type and all components have voiceover labels
 
 ## Lists
 - Locations (map?)

@@ -87,6 +87,10 @@ struct EditListView: View {
                 .padding(.horizontal, 15)
                 .padding(.bottom, 10)
                 
+                // edit destination and display placemark
+                LocationComponent(list: list)
+                    .padding(.horizontal, 15)
+                
                 // edit start date
                 DatePicker("\(Image(systemName: "calendar")) Departure date", selection: $list.startDate,
                            in: Date.distantPast...list.endDate, displayedComponents: .date)
@@ -263,5 +267,6 @@ struct EditListView: View {
         }
         .background((Theme(rawValue: theme) ?? .blue).get1())
         .tint(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
+        .scrollDismissesKeyboard(.immediately)
     }
 }
