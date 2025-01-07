@@ -9,49 +9,67 @@ import SwiftUI
 
 struct ListComponent: View {
     
+    @Environment(\.modelContext) var modelContext
+    
     var list: PackingList
     
     @Binding var path: NavigationPath
+    @Binding var inDuplicateMode: Bool
     
     var body: some View {
-        GeometryReader { geometry in
-            Button {
-                path.append(list)
-            } label: {
-                ZStack(alignment: .init(horizontal: .leading, vertical: .top)) {
-                    Rectangle()
-                        .fill(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
-                        .frame(width: geometry.size.width, height: geometry.size.height * 0.1)
-                        .padding(0)
+        
+            ZStack(alignment: .init(horizontal: .leading, vertical: .top)) {
+                Rectangle()
+                    .fill(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
+                    .frame(height: 10)
+                    .frame(maxWidth: .infinity)
+                    .padding(0)
+                
+                HStack(alignment: .center) {
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text(list.name)
+                            .font(.system(size: 20, weight: .bold))
+                            .padding(.bottom, 5)
+                        
+                        Text(list.startDate.formatted(date: .abbreviated, time: .omitted) + " - " + list.endDate.formatted(date: .abbreviated, time: .omitted))
+                            .font(.system(size: 18))
+                    }
+                    .padding(.leading, 15)
                     
-                    HStack(alignment: .center) {
-                        VStack(alignment: .leading, spacing: 0) {
-                            Text(list.name)
-                                .font(.system(size: 20, weight: .bold))
-                                .padding(.bottom, 5)
-                                
-                            Text(list.startDate.formatted(date: .abbreviated, time: .omitted) + " - " + list.endDate.formatted(date: .abbreviated, time: .omitted))
-                                .font(.system(size: 18))
+                    Spacer()
+                    
+                    if (inDuplicateMode) {
+                        Button("Duplicate") {
+                            let newList = PackingList.init(from: list)
+                            modelContext.insert(newList)
+                            path.append(newList)
                         }
-                        .padding(.leading, 15)
-                        
-                        Spacer()
-                        
-                        Image(systemName: "chevron.right.circle")
-                            .font(.system(size: 24, weight: .bold))
+                        .bold()
+                        .padding(.vertical, 5)
+                        .padding(.horizontal, 20)
+                        .background(.quaternary)
+                        .clipShape(Capsule())
+                        .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
+                        .padding(.trailing, 15)
+                    } else {
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 24, weight: .heavy))
                             .padding(.trailing, 15)
                             .buttonStyle(.plain)
                     }
-                    .padding(.vertical, 20)
                 }
-                
+                .padding(.vertical, 25)
             }
-            .buttonStyle(.plain)
-        }
-        .frame(minHeight: 100)
+            
+        
         .background(.quinary)
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .padding(15)
+        .onTapGesture {
+            if (!inDuplicateMode) {
+                path.append(list)
+            }
+        }
         
     }
 }

@@ -21,15 +21,12 @@ class Item {
         
     }
     
-    static func copy(from source: Item) -> Item {
-        let newItem = Item()
+    init(from source: Item) {
+        self.name = source.name
+        self.usages = source.usages
+        self.quantity = source.quantity
+        self.bag = source.bag
+        self.category = source.category
         
-        newItem.name = source.name
-        newItem.usages = source.usages
-        newItem.quantity = source.quantity
-        newItem.bag = source.bag
-        newItem.category = source.category
-        
-        return newItem
     }
 }

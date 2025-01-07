@@ -113,7 +113,7 @@ struct EditListView: View {
                     
                     // duplicate button
                     Button {
-                        modelContext.insert(PackingList.copy(from: list))
+                        modelContext.insert(PackingList.init(from: list))
                         path = NavigationPath()
                         
                     } label: {

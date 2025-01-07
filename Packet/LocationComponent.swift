@@ -98,10 +98,21 @@ struct LocationComponent: View {
                 }
                 
             } label: {
-                Image(systemName: inEditMode ? "checkmark" : "pencil")
-                    .font(.system(size: 22, weight: .heavy))
-                    .padding(.horizontal, 15)
-                    .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
+                if (!inEditMode) {
+                    Text("Edit")
+                        .bold()
+                        .padding(.vertical, 5)
+                        .padding(.horizontal, 20)
+                        .background(.quaternary)
+                        .clipShape(Capsule())
+                        .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
+                } else {
+                    Image(systemName: "checkmark")
+                        .font(.system(size: 20, weight: .heavy))
+                        .padding(.horizontal, 15)
+                        .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
+                }
+                
             }
             
         }

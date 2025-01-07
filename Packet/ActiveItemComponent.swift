@@ -41,10 +41,10 @@ struct ActiveItemComponent: View {
                 Text(item.name)
                     .padding(.horizontal, 3)
                 if (showCategory) {
-                    Text("\(Image(systemName: "list.clipboard")) \(item.category?.name ?? "(No category)")")
+                    Text("\(Image(systemName: "tag.fill")) \(item.category?.name ?? "(No category)")")
                         .foregroundStyle((Theme(rawValue: theme) ?? .blue).get2())
                 } else {
-                    Text("\(Image(systemName: "bag")) \(item.bag?.name ?? "(No bag)")")
+                    Text("\(Image(systemName: "bag.fill")) \(item.bag?.name ?? "(No bag)")")
                         .foregroundStyle((Theme(rawValue: theme) ?? .blue).get2())
                 }
                 Spacer()

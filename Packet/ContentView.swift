@@ -33,6 +33,13 @@ struct ContentView: View {
             }
             
             Tab(value: 3) {
+                TemplatesView()
+            } label: {
+                Image(systemName: "bookmark.fill")
+                Text("Templates")
+            }
+            
+            Tab(value: 4) {
                 PreferencesView()
             } label: {
                 Image(systemName: "person.fill")

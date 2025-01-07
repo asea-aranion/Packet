@@ -10,12 +10,22 @@ import SwiftData
 
 @main
 struct PacketApp: App {
+    
+    var container: ModelContainer
+    
+    init() {
+        do {
+            container = try ModelContainer(for: PackingList.self, TemplateList.self)
+        }
+        catch {
+            fatalError("Failed to initialize data container: \(error)")
+        }
+    }
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
-        .modelContainer(for: PackingList.self)
-        .modelContainer(for: Bag.self)
-        .modelContainer(for: Category.self)
+        .modelContainer(container)
     }
 }

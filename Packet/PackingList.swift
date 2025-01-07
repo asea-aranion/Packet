@@ -28,6 +28,26 @@ class PackingList {
         items = [Item]()
     }
     
+    init(from source: PackingList) {
+        self.name = source.name
+        self.colorRed = source.colorRed
+        self.colorGreen = source.colorGreen
+        self.colorBlue = source.colorBlue
+        self.tripLength = source.tripLength
+        
+        source.items?.forEach {
+            self.items?.append(Item.init(from: $0))
+        }
+    }
+    
+    init(from source: TemplateList) {
+        self.name = source.name
+        
+        source.items?.forEach {
+            self.items?.append(Item.init(from: $0))
+        }
+    }
+    
     func uniqueItemNames() -> Set<String> {
         
         var result: Set<String> = []
@@ -75,18 +95,4 @@ class PackingList {
         })
     }
     
-    static func copy(from source: PackingList) -> PackingList {
-        let copyList = PackingList()
-        copyList.name = source.name
-        copyList.colorRed = source.colorRed
-        copyList.colorGreen = source.colorGreen
-        copyList.colorBlue = source.colorBlue
-        copyList.tripLength = source.tripLength
-        
-        source.items?.forEach {
-            copyList.items?.append(Item.copy(from: $0))
-        }
-        
-        return copyList
-    }
 }

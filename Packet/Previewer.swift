@@ -14,7 +14,7 @@ struct Previewer {
     
     init() throws {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        container = try ModelContainer(for: PackingList.self, configurations: config)
+        container = try ModelContainer(for: PackingList.self, TemplateList.self, configurations: config)
         
         list = PackingList()
         list.name = "Previewer List"
