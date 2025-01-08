@@ -23,7 +23,9 @@ struct TemplatesView: View {
             ScrollView {
                 VStack {
                     Button {
-                        modelContext.insert(TemplateList())
+                        let newTemplate = TemplateList()
+                        modelContext.insert(newTemplate)
+                        path.append(newTemplate)
                     } label: {
                         VStack(alignment: .leading) {
                             Text("\(Image(systemName: "plus.circle")) Add Template")

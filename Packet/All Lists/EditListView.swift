@@ -60,8 +60,7 @@ struct EditListView: View {
                         .padding(.vertical, 10)
                         .padding(.horizontal, 20)
                         .background(list.active ?
-                                    Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue) :
-                                .clear)
+                                    Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue) : .clear)
                         .foregroundStyle(list.active ?
                                          (Theme(rawValue: theme) ?? .blue).get1() :
                                             Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
@@ -92,13 +91,17 @@ struct EditListView: View {
                     .padding(.horizontal, 15)
                 
                 // edit start date
-                DatePicker("\(Image(systemName: "calendar")) Departure date", selection: $list.startDate,
-                           in: Date.distantPast...list.endDate, displayedComponents: .date)
+                DatePicker("\(Image(systemName: "calendar")) Departure date", selection: $list.startDate, displayedComponents: .date)
                 .padding(15)
                 .background(.quinary)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 .padding(.bottom, 10)
                 .padding(.horizontal, 15)
+                .onChange(of: list.startDate) {
+                    if (list.startDate > list.endDate) {
+                        list.endDate = list.startDate
+                    }
+                }
                 
                 // edit end date
                 DatePicker("\(Image(systemName: "calendar")) Return date", selection: $list.endDate,
@@ -119,7 +122,7 @@ struct EditListView: View {
                     } label: {
                         Text("\(Image(systemName: "square.on.square")) Duplicate")
                             .font(.body.bold())
-                            .padding([.top, .bottom], 15)
+                            .padding(.vertical, 15)
                         
                             .frame(maxWidth: .infinity)
                             .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
@@ -136,7 +139,7 @@ struct EditListView: View {
                     } label: {
                         Text("\(Image(systemName: "trash")) Delete")
                             .font(.body.bold())
-                            .padding([.top, .bottom], 15)
+                            .padding(.vertical, 15)
                         
                             .frame(maxWidth: .infinity)
                             .foregroundStyle(.red)
@@ -155,8 +158,8 @@ struct EditListView: View {
                 Text("Items")
                     .foregroundStyle((Theme(rawValue: theme) ?? .blue).get1())
                     .font(.system(size: 20, weight: .bold))
-                    .padding([.leading, .trailing], 30)
-                    .padding([.top, .bottom], 15)
+                    .padding(.horizontal, 30)
+                    .padding(.vertical, 15)
                     .background(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
                     .clipShape(UnevenRoundedRectangle(cornerRadii:
                             .init(topLeading: 10, bottomLeading: 0, bottomTrailing: 0, topTrailing: 10)))
@@ -180,7 +183,7 @@ struct EditListView: View {
                     
                     .frame(height: 60)
                     .padding(.top, 10)
-                    .padding([.leading, .trailing], 15)
+                    .padding(.horizontal, 15)
                 }
                 .buttonStyle(.plain)
                 .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
@@ -203,7 +206,7 @@ struct EditListView: View {
                                 }
                             }
                         } label: {
-                            Text("\(Image(systemName: "list.clipboard")) \(ignoreCategory ? "Any" : (categoryFilter?.name ?? "(No category)")) \(Image(systemName: "chevron.down"))")
+                            Text("\(Image(systemName: "tag")) \(ignoreCategory ? "Any" : (categoryFilter?.name ?? "(No category)")) \(Image(systemName: "chevron.down"))")
                         }
                         .padding(.vertical, 20)
                         .frame(maxWidth: .infinity)
@@ -252,7 +255,7 @@ struct EditListView: View {
                             }
                             .buttonStyle(.plain)
                             .padding(.top, 10)
-                            .padding([.leading, .trailing], 15)
+                            .padding(.horizontal, 15)
                         }
                 }
                 
@@ -262,8 +265,9 @@ struct EditListView: View {
         .onAppear {
             selectedColor = Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue)
         }
-        .popover(item: $itemToEdit) { data in
+        .sheet(item: $itemToEdit) { data in
             EditItemView(item: data, duration: Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: list.startDate), to: Calendar.current.startOfDay(for: list.endDate)).day ?? 0)
+                .presentationDetents([.fraction(0.4)])
         }
         .background((Theme(rawValue: theme) ?? .blue).get1())
         .tint(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))

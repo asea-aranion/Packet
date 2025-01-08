@@ -20,19 +20,7 @@ struct EditItemView: View {
     var duration: Int = 0
     
     var body: some View {
-        ScrollView {
             VStack(alignment: .leading) {
-                HStack {
-                    Spacer()
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "xmark.circle")
-                            .font(.system(size: 40))
-                    }
-                }
-                .padding(.top, 20)
-                .padding(.trailing, 24)
                 
                 // name field
                 HStack {
@@ -80,8 +68,7 @@ struct EditItemView: View {
                 .padding(.horizontal, 15)
                 .padding(.vertical, 10)
                 
-                GeometryReader { geometry in
-                    HStack {
+                HStack(spacing: 15) {
                         // category picker
                         Menu {
                             Button {
@@ -105,7 +92,7 @@ struct EditItemView: View {
                             }
                         }
                         .padding(15)
-                        .frame(width: geometry.size.width * 0.45)
+                        .frame(maxWidth: .infinity)
                         .background(.quinary)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                         
@@ -130,16 +117,14 @@ struct EditItemView: View {
                             }
                         }
                         .padding(15)
-                        .frame(width: geometry.size.width * 0.45)
+                        .frame(maxWidth: .infinity)
                         .background(.quinary)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                     }
-                    .padding([.leading, .trailing], 15)
-                }
-                
-                
+                    .padding(.horizontal, 15)
                 
             }
+            .padding(.top, 10)
         }
-    }
+    
 }

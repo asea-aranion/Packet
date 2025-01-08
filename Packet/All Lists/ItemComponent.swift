@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ItemComponent: View {
     
+    @AppStorage("theme") var theme = 0
+    
     var item: Item
     
     var body: some View {
@@ -16,22 +18,18 @@ struct ItemComponent: View {
             HStack {
                 Text(String(item.quantity))
                     .padding(10)
-                    .background(.quinary)
+                    .background(.quaternary)
                     .clipShape(Circle())
                 Text(item.name)
                     .padding(.leading, 3)
                 Spacer()
             }
-            HStack {
-                Text(item.category?.name ?? "(No category)")
-                    .font(.system(size: 18))
-                Image(systemName: "circle.fill")
-                    .font(.system(size: 8))
-                Text(item.bag?.name ?? "(No bag)")
-                    .font(.system(size: 18))
+            HStack(spacing: 10) {
+                Text("\(Image(systemName: "tag")) \(item.category?.name ?? "(No category)")")
+                Text("\(Image(systemName: "bag")) \(item.bag?.name ?? "(No bag)")")
                 Spacer()
             }
-            .padding(5)
+            .foregroundStyle((Theme(rawValue: theme) ?? .blue).get2())
         }
         .frame(maxWidth: .infinity)
         .padding(10)
