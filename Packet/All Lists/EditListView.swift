@@ -30,7 +30,7 @@ struct EditListView: View {
     
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading) {
+            VStack(alignment: .center) {
                 
                 // edit list name
                 TextField("Packing list name", text: $list.name)
@@ -46,45 +46,48 @@ struct EditListView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 10))
                     .padding(15)
                 
-                HStack(spacing: 15) {
-                    // toggle active
-                    Button {
-                        withAnimation(.easeInOut(duration: 0.1)) {
-                            list.active.toggle()
-                        }
-                    } label: {
-                        Text(list.active ?
-                             "\(Image(systemName: "checkmark")) Active" :
-                                "\(Image(systemName: "xmark")) Inactive")
-                        .bold()
-                        .padding(.vertical, 10)
-                        .padding(.horizontal, 20)
-                        .background(list.active ?
-                                    Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue) : .clear)
-                        .foregroundStyle(list.active ?
-                                         (Theme(rawValue: theme) ?? .blue).get1() :
-                                            Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
-                        .clipShape(RoundedRectangle(cornerRadius: 6))
+                // toggle active
+                Button {
+                    withAnimation(.easeInOut(duration: 0.1)) {
+                        list.active.toggle()
                     }
+                } label: {
+                    if (list.active) {
+                        Text("\(Image(systemName: "checkmark")) Active")
+                            .bold()
+                            .padding(.vertical, 15)
+                            .padding(.horizontal, 20)
+                            .background(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
+                            .clipShape(Capsule())
+                            .foregroundStyle(.white)
+                    }
+                    else {
+                        Text("\(Image(systemName: "xmark")) Inactive")
+                            .bold()
+                            .padding(.vertical, 15)
+                            .padding(.horizontal, 20)
+                            .background(.quinary)
+                            .clipShape(Capsule())
+                            .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
+                    }
+                }
+                .padding(.horizontal, 15)
+                .padding(.bottom, 10)
+                
+                // edit list color
+                ColorPicker("\(Image(systemName: "paintbrush")) Color", selection: $selectedColor)
+                    .onChange(of: selectedColor) {
+                        list.colorRed = Double(selectedColor.resolve(in: environment).red)
+                        list.colorGreen = Double(selectedColor.resolve(in: environment).green)
+                        list.colorBlue = Double(selectedColor.resolve(in: environment).blue)
+                    }
+                    .padding(15)
                     .frame(maxWidth: .infinity, minHeight: 60)
                     .background(.quinary)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
-                    
-                    // edit list color
-                    ColorPicker("\(Image(systemName: "paintbrush")) Color", selection: $selectedColor)
-                        .onChange(of: selectedColor) {
-                            list.colorRed = Double(selectedColor.resolve(in: environment).red)
-                            list.colorGreen = Double(selectedColor.resolve(in: environment).green)
-                            list.colorBlue = Double(selectedColor.resolve(in: environment).blue)
-                        }
-                        .padding(15)
-                        .frame(maxWidth: .infinity, minHeight: 60)
-                        .background(.quinary)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                }
-                .frame(minHeight: 60)
-                .padding(.horizontal, 15)
-                .padding(.bottom, 10)
+                
+                    .padding(.horizontal, 15)
+                    .padding(.bottom, 10)
                 
                 // edit destination and display placemark
                 LocationComponent(list: list)
@@ -92,16 +95,16 @@ struct EditListView: View {
                 
                 // edit start date
                 DatePicker("\(Image(systemName: "calendar")) Departure date", selection: $list.startDate, displayedComponents: .date)
-                .padding(15)
-                .background(.quinary)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-                .padding(.bottom, 10)
-                .padding(.horizontal, 15)
-                .onChange(of: list.startDate) {
-                    if (list.startDate > list.endDate) {
-                        list.endDate = list.startDate
+                    .padding(15)
+                    .background(.quinary)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .padding(.bottom, 10)
+                    .padding(.horizontal, 15)
+                    .onChange(of: list.startDate) {
+                        if (list.startDate > list.endDate) {
+                            list.endDate = list.startDate
+                        }
                     }
-                }
                 
                 // edit end date
                 DatePicker("\(Image(systemName: "calendar")) Return date", selection: $list.endDate,
@@ -189,53 +192,53 @@ struct EditListView: View {
                 .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
                 
                 // item filters
-                    HStack(spacing: 15) {
-                        // category picker
-                        Menu {
-                            Button("Any") {
-                                ignoreCategory = true
-                            }
-                            Button("(No category)") {
+                HStack(spacing: 15) {
+                    // category picker
+                    Menu {
+                        Button("Any") {
+                            ignoreCategory = true
+                        }
+                        Button("(No category)") {
+                            ignoreCategory = false
+                            categoryFilter = nil
+                        }
+                        ForEach(categories) { category in
+                            Button(category.name) {
                                 ignoreCategory = false
-                                categoryFilter = nil
+                                categoryFilter = category
                             }
-                            ForEach(categories) { category in
-                                Button(category.name) {
-                                    ignoreCategory = false
-                                    categoryFilter = category
-                                }
-                            }
-                        } label: {
-                            Text("\(Image(systemName: "tag")) \(ignoreCategory ? "Any" : (categoryFilter?.name ?? "(No category)")) \(Image(systemName: "chevron.down"))")
                         }
-                        .padding(.vertical, 20)
-                        .frame(maxWidth: .infinity)
-                        .background(.quinary)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                        
-                        // bag picker
-                        Menu {
-                            Button("Any") {
-                                ignoreBag = true
-                            }
-                            Button("(No bag)") {
-                                ignoreBag = false
-                                bagFilter = nil
-                            }
-                            ForEach(bags) { bag in
-                                Button(bag.name) {
-                                    ignoreBag = false
-                                    bagFilter = bag
-                                }
-                            }
-                        } label: {
-                            Text("\(Image(systemName: "bag")) \(ignoreBag ? "Any" : (bagFilter?.name ?? "(No bag)")) \(Image(systemName: "chevron.down"))")
-                        }
-                        .padding(.vertical, 20)
-                        .frame(maxWidth: .infinity)
-                        .background(.quinary)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                    } label: {
+                        Text("\(Image(systemName: "tag")) \(ignoreCategory ? "Any" : (categoryFilter?.name ?? "(No category)")) \(Image(systemName: "chevron.down"))")
                     }
+                    .padding(.vertical, 20)
+                    .frame(maxWidth: .infinity)
+                    .background(.quinary)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    
+                    // bag picker
+                    Menu {
+                        Button("Any") {
+                            ignoreBag = true
+                        }
+                        Button("(No bag)") {
+                            ignoreBag = false
+                            bagFilter = nil
+                        }
+                        ForEach(bags) { bag in
+                            Button(bag.name) {
+                                ignoreBag = false
+                                bagFilter = bag
+                            }
+                        }
+                    } label: {
+                        Text("\(Image(systemName: "bag")) \(ignoreBag ? "Any" : (bagFilter?.name ?? "(No bag)")) \(Image(systemName: "chevron.down"))")
+                    }
+                    .padding(.vertical, 20)
+                    .frame(maxWidth: .infinity)
+                    .background(.quinary)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                }
                 
                 .frame(minHeight: 60)
                 .padding(.horizontal, 15)

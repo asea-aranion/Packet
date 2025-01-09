@@ -18,7 +18,7 @@ struct TemplateComponent: View {
     var body: some View {
         ZStack(alignment: .init(horizontal: .leading, vertical: .top)) {
             Rectangle()
-                .fill((Theme(rawValue: theme) ?? .blue).get2())
+                .fill(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
                 .frame(height: 10)
                 .frame(maxWidth: .infinity)
                 .padding(0)
@@ -35,7 +35,7 @@ struct TemplateComponent: View {
                 Spacer()
                 
                 Image(systemName: "chevron.right")
-                    .font(.system(size: 24, weight: .heavy))
+                    .font(.system(size: 24, weight: .bold))
                     .padding(.trailing, 15)
                     .buttonStyle(.plain)
                 

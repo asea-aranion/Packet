@@ -53,7 +53,7 @@ struct ListComponent: View {
                         .padding(.trailing, 15)
                     } else {
                         Image(systemName: "chevron.right")
-                            .font(.system(size: 24, weight: .heavy))
+                            .font(.system(size: 24, weight: .bold))
                             .padding(.trailing, 15)
                             .buttonStyle(.plain)
                     }

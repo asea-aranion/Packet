@@ -10,6 +10,7 @@ import SwiftData
 
 struct EditTemplateView: View {
     
+    @Environment(\.self) var environment
     @Environment(\.modelContext) var modelContext
     
     @Query var categories: [Category]
@@ -21,6 +22,7 @@ struct EditTemplateView: View {
     @State var bagFilter: Bag?
     @State var ignoreCategory: Bool = true
     @State var ignoreBag: Bool = true
+    @State var selectedColor: Color = .blue
     @State var itemToEdit: Item?
     
     @AppStorage("theme") var theme = 0
@@ -39,17 +41,30 @@ struct EditTemplateView: View {
                     .padding(5)
                     .background((Theme(rawValue: theme) ?? .blue).get1())
                     .clipShape(RoundedRectangle(cornerRadius: 6))
-                    .foregroundStyle((Theme(rawValue: theme) ?? .blue).get2())
+                    .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
                     .padding(15)
-                    .background((Theme(rawValue: theme) ?? .blue).get2())
+                    .background(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
                     .clipShape(RoundedRectangle(cornerRadius: 10))
                     .padding(15)
+                
+                ColorPicker("\(Image(systemName: "paintbrush")) Color", selection: $selectedColor)
+                    .onChange(of: selectedColor) {
+                        list.colorRed = Double(selectedColor.resolve(in: environment).red)
+                        list.colorGreen = Double(selectedColor.resolve(in: environment).green)
+                        list.colorBlue = Double(selectedColor.resolve(in: environment).blue)
+                    }
+                    .padding(15)
+                    .frame(maxWidth: .infinity, minHeight: 60)
+                    .background(.quinary)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .padding(.horizontal, 15)
+                    .padding(.bottom, 10)
                 
                 HStack(spacing: 15) {
                     
                     // duplicate button
                     Button {
-                        modelContext.insert(PackingList.init(from: list))
+                        modelContext.insert(TemplateList.init(from: list))
                         path = NavigationPath()
                         
                     } label: {
@@ -58,7 +73,7 @@ struct EditTemplateView: View {
                             .padding(.vertical, 15)
                         
                             .frame(maxWidth: .infinity)
-                            .foregroundStyle((Theme(rawValue: theme) ?? .blue).get2())
+                            .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
                             .background(.quinary)
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                     }
@@ -93,7 +108,7 @@ struct EditTemplateView: View {
                     .font(.system(size: 20, weight: .bold))
                     .padding(.horizontal, 30)
                     .padding(.vertical, 15)
-                    .background((Theme(rawValue: theme) ?? .blue).get2())
+                    .background(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
                     .clipShape(UnevenRoundedRectangle(cornerRadii:
                             .init(topLeading: 10, bottomLeading: 0, bottomTrailing: 0, topTrailing: 10)))
                     .padding(.leading, 15)
@@ -109,7 +124,7 @@ struct EditTemplateView: View {
                             .font(.system(size: 18, weight: .bold))
                         
                         RoundedRectangle(cornerRadius: 10)
-                            .fill((Theme(rawValue: theme) ?? .blue).get2())
+                            .fill(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
                             .frame(height: 8)
                         
                     }
@@ -119,7 +134,7 @@ struct EditTemplateView: View {
                     .padding(.horizontal, 15)
                 }
                 .buttonStyle(.plain)
-                .foregroundStyle((Theme(rawValue: theme) ?? .blue).get2())
+                .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
                 
                 // item filters
                     HStack(spacing: 15) {
@@ -193,9 +208,15 @@ struct EditTemplateView: View {
                 }
             }
         }
+        .onAppear {
+            selectedColor = Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue)
+        }
         .sheet(item: $itemToEdit) { data in
             EditTemplateItemView(item: data)
             .presentationDetents([.fraction(0.4)])
         }
+        .background((Theme(rawValue: theme) ?? .blue).get1())
+        .tint(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
+        .scrollDismissesKeyboard(.immediately)
     }
 }

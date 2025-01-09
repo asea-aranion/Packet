@@ -17,7 +17,6 @@ class PackingList {
     var colorGreen: Double = 159 / 255
     var colorBlue: Double = 211 / 255
     @Relationship(deleteRule: .cascade) var items: [Item]?
-    var tripLength: Int = 1
     var active: Bool = false
     var startDate: Date = Date()
     var endDate: Date = Date()
@@ -29,11 +28,12 @@ class PackingList {
     }
     
     init(from source: PackingList) {
-        self.name = source.name
+        self.name = source.name + " copy"
         self.colorRed = source.colorRed
         self.colorGreen = source.colorGreen
         self.colorBlue = source.colorBlue
-        self.tripLength = source.tripLength
+        
+        self.items = [Item]()
         
         source.items?.forEach {
             self.items?.append(Item.init(from: $0))
@@ -42,6 +42,8 @@ class PackingList {
     
     init(from source: TemplateList) {
         self.name = source.name
+        
+        self.items = [Item]()
         
         source.items?.forEach {
             self.items?.append(Item.init(from: $0))

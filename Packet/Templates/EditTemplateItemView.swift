@@ -13,6 +13,8 @@ struct EditTemplateItemView: View {
     @Query var categories: [Category]
     @Query var bags: [Bag]
     
+    //var listColor: Color
+    
     @Bindable var item: Item
     
     var body: some View {
@@ -108,5 +110,6 @@ struct EditTemplateItemView: View {
             
         }
         .padding(.top, 10)
+        //.tint(listColor)
     }
 }
