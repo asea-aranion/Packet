@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct BagEditComponent: View {
     
@@ -13,7 +14,17 @@ struct BagEditComponent: View {
     
     @AppStorage("theme") var theme: Int = 0
     
+    @Query var itemsWithBag: [Item]
+    
     @Bindable var bag: Bag
+    
+    init(bag: Bag) {
+        _bag = .init(bag)
+        let id = bag.persistentModelID
+        _itemsWithBag = Query(filter: #Predicate {
+            $0.bag?.persistentModelID == id
+        })
+    }
     
     var body: some View {
         
@@ -57,7 +68,10 @@ struct BagEditComponent: View {
                 }
                 
                 Button {
-                    //modelContext.delete(category)
+                    itemsWithBag.forEach {
+                        $0.bag = nil
+                    }
+                    modelContext.delete(bag)
                 } label: {
                     Image(systemName: "trash")
                         .foregroundStyle(.red)
@@ -81,12 +95,10 @@ struct BagEditComponent: View {
                 .padding(.trailing, 10)
             }
         }
-        
-        
         .padding(10)
         .background(.quinary)
         .clipShape(RoundedRectangle(cornerRadius: 10))
-        .padding(.top, 10)
+        .padding(.vertical, 5)
         .buttonStyle(.plain)
     }
 }

@@ -157,17 +157,20 @@ struct EditListView: View {
                 .padding(.horizontal, 15)
                 .padding(.bottom, 10)
                 
-                // view and edit list items
-                Text("Items")
-                    .foregroundStyle((Theme(rawValue: theme) ?? .blue).get1())
-                    .font(.system(size: 20, weight: .bold))
-                    .padding(.horizontal, 30)
-                    .padding(.vertical, 15)
-                    .background(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
-                    .clipShape(UnevenRoundedRectangle(cornerRadii:
-                            .init(topLeading: 10, bottomLeading: 0, bottomTrailing: 0, topTrailing: 10)))
-                    .padding(.leading, 15)
-                    .padding(.top, 20)
+                HStack {
+                    // view and edit list items
+                    Text("Items")
+                        .foregroundStyle((Theme(rawValue: theme) ?? .blue).get1())
+                        .font(.system(size: 20, weight: .bold))
+                        .padding(.horizontal, 30)
+                        .padding(.vertical, 15)
+                        .background(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
+                        .clipShape(UnevenRoundedRectangle(cornerRadii:
+                                .init(topLeading: 10, bottomLeading: 0, bottomTrailing: 0, topTrailing: 10)))
+                        .padding(.leading, 15)
+                        .padding(.top, 20)
+                    Spacer()
+                }
                 
                 Button {
                     let newItem = Item()
@@ -257,7 +260,7 @@ struct EditListView: View {
                                 ItemComponent(item: item)
                             }
                             .buttonStyle(.plain)
-                            .padding(.top, 10)
+                            .padding(.vertical, 5)
                             .padding(.horizontal, 15)
                         }
                 }

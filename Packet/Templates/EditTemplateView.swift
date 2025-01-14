@@ -202,7 +202,7 @@ struct EditTemplateView: View {
                                 ItemComponent(item: item)
                             }
                             .buttonStyle(.plain)
-                            .padding(.top, 10)
+                            .padding(.vertical, 5)
                             .padding(.horizontal, 15)
                         }
                 }

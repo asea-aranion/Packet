@@ -18,6 +18,7 @@ class PackingList {
     var colorBlue: Double = 211 / 255
     @Relationship(deleteRule: .cascade) var items: [Item]?
     var active: Bool = false
+    var activeSelected: Bool = false
     var startDate: Date = Date()
     var endDate: Date = Date()
     var long: Double = 0

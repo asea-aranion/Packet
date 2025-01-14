@@ -53,12 +53,12 @@ struct EditItemView: View {
                         
                 }
                 .padding(.horizontal, 15)
-                .padding(.vertical, 10)
+                .padding(.bottom, 5)
                 
                 Button {
                     item.quantity = duration
                 } label: {
-                    Text("Set to trip duration (\(duration) nights)")
+                    Text("Set quantity to duration (\(duration) nights)")
                 }
                 
                 .padding(10)

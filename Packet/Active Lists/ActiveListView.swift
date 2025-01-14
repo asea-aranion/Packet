@@ -49,7 +49,9 @@ struct ActiveListView: View {
                         Menu {
                             ForEach(activeLists) { list in
                                 Button(list.name) {
+                                    activeList?.activeSelected = false
                                     activeList = list
+                                    activeList?.activeSelected = true
                                 }
                             }
                         } label: {
@@ -273,9 +275,14 @@ struct ActiveListView: View {
             .background((Theme(rawValue: theme) ?? .blue).get1())
             .popover(item: $itemToEdit) { data in
                 EditItemView(item: data)
+                    .presentationDetents([.fraction(0.4)])
             }
             .buttonStyle(.plain)
             .tint((Theme(rawValue: theme) ?? .blue).get2())
-            
+            .onAppear {
+                activeList = activeLists.first(where: {
+                    $0.activeSelected
+                })
+            }
     }
 }
