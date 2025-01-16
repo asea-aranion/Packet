@@ -15,12 +15,15 @@ struct EditItemView: View {
     @Query var categories: [Category]
     @Query var bags: [Bag]
     
+    @State var showDeleteConf: Bool = false
+    
+    @Bindable var list: PackingList
     @Bindable var item: Item
     
     var duration: Int = 0
     
     var body: some View {
-            VStack(alignment: .leading) {
+            VStack {
                 
                 // name field
                 HStack {
@@ -123,8 +126,28 @@ struct EditItemView: View {
                     }
                     .padding(.horizontal, 15)
                 
+                Button {
+                    showDeleteConf = true
+                } label: {
+                    Text("\(Image(systemName: "trash")) Delete")
+                        .bold()
+                }
+                .foregroundStyle(.red)
+                .padding(.vertical, 15)
+                .padding(.horizontal, 20)
+                .background(.quinary)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .padding(.horizontal, 15)
+                .padding(.top, 10)
+                
             }
             .padding(.top, 10)
+            .confirmationDialog("Delete this item?", isPresented: $showDeleteConf, actions: {
+                Button("Delete", role: .destructive) {
+                    list.items?.removeAll(where: {$0.persistentModelID == item.persistentModelID})
+                    dismiss()
+                }
+            })
         }
     
 }

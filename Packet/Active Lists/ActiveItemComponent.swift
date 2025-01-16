@@ -10,6 +10,7 @@ import SwiftUI
 struct ActiveItemComponent: View {
     
     @Bindable var item: Item
+    
     @Binding var itemToEdit: Item?
     
     @AppStorage("theme") var theme: Int = 0

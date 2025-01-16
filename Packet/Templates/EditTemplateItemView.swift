@@ -10,15 +10,18 @@ import SwiftData
 
 struct EditTemplateItemView: View {
     
+    @Environment(\.dismiss) var dismiss
+    
     @Query var categories: [Category]
     @Query var bags: [Bag]
     
-    //var listColor: Color
-    
+    @Bindable var list: TemplateList
     @Bindable var item: Item
     
+    @State var showDeleteConf: Bool = false
+    
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .center) {
             
             // name field
             HStack {
@@ -108,8 +111,27 @@ struct EditTemplateItemView: View {
                 }
                 .padding(.horizontal, 15)
             
+            Button {
+                showDeleteConf = true
+            } label: {
+                Text("\(Image(systemName: "trash")) Delete")
+                    .bold()
+            }
+            .foregroundStyle(.red)
+            .padding(.vertical, 15)
+            .padding(.horizontal, 20)
+            .background(.quinary)
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .padding(.horizontal, 15)
+            .padding(.top, 10)
+            
         }
         .padding(.top, 10)
-        //.tint(listColor)
+        .confirmationDialog("Delete this item?", isPresented: $showDeleteConf, actions: {
+            Button("Delete", role: .destructive) {
+                list.items?.removeAll(where: {$0.persistentModelID == item.persistentModelID})
+                dismiss()
+            }
+        })
     }
 }

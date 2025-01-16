@@ -24,6 +24,7 @@ struct EditTemplateView: View {
     @State var ignoreBag: Bool = true
     @State var selectedColor: Color = .blue
     @State var itemToEdit: Item?
+    @State var showDeleteConf: Bool = false
     
     @AppStorage("theme") var theme = 0
     
@@ -81,8 +82,7 @@ struct EditTemplateView: View {
                     
                     // delete button
                     Button {
-                        modelContext.delete(list)
-                        path = NavigationPath()
+                        showDeleteConf = true
                         
                     } label: {
                         Text("\(Image(systemName: "trash")) Delete")
@@ -211,8 +211,16 @@ struct EditTemplateView: View {
         .onAppear {
             selectedColor = Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue)
         }
+        .confirmationDialog("Delete this template?", isPresented: $showDeleteConf, actions: {
+            Button("Delete", role: .destructive) {
+                modelContext.delete(list)
+                path = NavigationPath()
+            }
+        }, message: {
+            Text("This will delete all this template's data and items.")
+        })
         .sheet(item: $itemToEdit) { data in
-            EditTemplateItemView(item: data)
+            EditTemplateItemView(list: list, item: data)
             .presentationDetents([.fraction(0.4)])
         }
         .background((Theme(rawValue: theme) ?? .blue).get1())

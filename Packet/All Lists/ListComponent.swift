@@ -70,6 +70,5 @@ struct ListComponent: View {
                 path.append(list)
             }
         }
-        
     }
 }

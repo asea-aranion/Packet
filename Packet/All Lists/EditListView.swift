@@ -23,6 +23,7 @@ struct EditListView: View {
     @State var bagFilter: Bag? = nil
     @State var ignoreCategory: Bool = true
     @State var ignoreBag: Bool = true
+    @State var showDeleteConf: Bool = false
     
     @AppStorage("theme") var theme: Int = 0
     
@@ -136,9 +137,7 @@ struct EditListView: View {
                     
                     // delete button
                     Button {
-                        modelContext.delete(list)
-                        path = NavigationPath()
-                        
+                        showDeleteConf = true
                     } label: {
                         Text("\(Image(systemName: "trash")) Delete")
                             .font(.body.bold())
@@ -272,9 +271,17 @@ struct EditListView: View {
             selectedColor = Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue)
         }
         .sheet(item: $itemToEdit) { data in
-            EditItemView(item: data, duration: Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: list.startDate), to: Calendar.current.startOfDay(for: list.endDate)).day ?? 0)
+            EditItemView(list: list, item: data, duration: Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: list.startDate), to: Calendar.current.startOfDay(for: list.endDate)).day ?? 0)
                 .presentationDetents([.fraction(0.4)])
         }
+        .confirmationDialog("Delete this packing list?", isPresented: $showDeleteConf, actions: {
+            Button("Delete", role: .destructive) {
+                modelContext.delete(list)
+                path = NavigationPath()
+            }
+        }, message: {
+            Text("This will delete all this list's data and items.")
+        })
         .background((Theme(rawValue: theme) ?? .blue).get1())
         .tint(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
         .scrollDismissesKeyboard(.immediately)

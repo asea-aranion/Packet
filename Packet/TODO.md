@@ -5,6 +5,7 @@
 - Ensure font sizes change with dynamic type and all components have voiceover labels
 - Finish template views
 - Add confirmation dialogs to delete buttons
+- ActiveListView - finalize group by picker UI
 
 ## Lists
 - Weather?

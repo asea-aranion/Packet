@@ -42,7 +42,7 @@ class PackingList {
     }
     
     init(from source: TemplateList) {
-        self.name = source.name
+        self.name = source.name + " copy"
         
         self.items = [Item]()
         

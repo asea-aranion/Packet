@@ -266,6 +266,10 @@ struct ActiveListView: View {
                             .padding(.horizontal, 15)
                             .padding(.bottom, 15)
                         }
+                        .popover(item: $itemToEdit) { data in
+                            EditItemView(list: activeList ?? PackingList(), item: data)
+                                .presentationDetents([.fraction(0.4)])
+                        }
                         .scrollDismissesKeyboard(.immediately)
                     }
                     
@@ -273,10 +277,7 @@ struct ActiveListView: View {
             }
             
             .background((Theme(rawValue: theme) ?? .blue).get1())
-            .popover(item: $itemToEdit) { data in
-                EditItemView(item: data)
-                    .presentationDetents([.fraction(0.4)])
-            }
+            
             .buttonStyle(.plain)
             .tint((Theme(rawValue: theme) ?? .blue).get2())
             .onAppear {

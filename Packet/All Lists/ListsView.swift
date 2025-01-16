@@ -13,6 +13,7 @@ struct ListsView: View {
     @Environment(\.modelContext) var modelContext
     
     @Query(sort: \PackingList.startDate, order: .reverse) var lists: [PackingList]
+    @Query var templates: [TemplateList]
     
     @State var path: NavigationPath = NavigationPath()
     @State var inDuplicateMode: Bool = false
@@ -29,8 +30,14 @@ struct ListsView: View {
                             modelContext.insert(newList)
                             path.append(newList)
                         }
-                        Button("Create from template") {
-                            // add template view
+                        Menu("Create from template") {
+                            ForEach(templates) { template in
+                                Button(template.name) {
+                                    let newList = PackingList(from: template)
+                                    modelContext.insert(newList)
+                                    path.append(newList)
+                                }
+                            }
                         }
                         Button("Duplicate a list") {
                             inDuplicateMode = true
