@@ -3,12 +3,9 @@
 ## Views
 - Finish theme color palettes and implementation
 - Ensure font sizes change with dynamic type and all components have voiceover labels
-- Finish template views
-- Add confirmation dialogs to delete buttons
 - ActiveListView - finalize group by picker UI
-
-## Lists
-- Weather?
+- Add launch screen
+- WeatherComponent - clean up UI
 
 ## Items
 - Add autofill search for item name

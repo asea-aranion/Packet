@@ -7,6 +7,7 @@
 
 import CoreLocation
 import SwiftUI
+import WeatherKit
 
 extension CLPlacemark {
     func locationString() -> String {
@@ -45,17 +46,16 @@ struct LocationComponent: View {
             
             Image(systemName: "mappin.and.ellipse")
             
+            // location text/field
             VStack(spacing: 0) {
                 
                 if (inEditMode) {
                     TextField("Location", text: $locText)
-                        .bold()
                         .multilineTextAlignment(.leading)
                         .padding(.top, 5)
                 }
                 else {
                     Text(placemark?.locationString() ?? "(No location)")
-                        .bold()
                         .multilineTextAlignment(.leading)
                         .padding(.leading, 1)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -72,9 +72,10 @@ struct LocationComponent: View {
             }
             .padding(.horizontal, 10)
             
+            
+            // edit button
             Button {
                 if (!inEditMode) {
-                    
                     withAnimation(.easeInOut) {
                         inEditMode = true
                     }
@@ -133,6 +134,7 @@ struct LocationComponent: View {
             })
         }
         
+        // error message
         if (!errorText.isEmpty) {
             Text(errorText)
                 .foregroundStyle(.red)
@@ -141,7 +143,6 @@ struct LocationComponent: View {
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 .padding(.bottom, 10)
         }
-       
         
     }
 }

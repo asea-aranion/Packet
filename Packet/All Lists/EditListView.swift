@@ -24,6 +24,7 @@ struct EditListView: View {
     @State var ignoreCategory: Bool = true
     @State var ignoreBag: Bool = true
     @State var showDeleteConf: Bool = false
+    @State var weatherUpdated: Bool = false
     
     @AppStorage("theme") var theme: Int = 0
     
@@ -115,6 +116,11 @@ struct EditListView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 .padding(.bottom, 10)
                 .padding(.horizontal, 15)
+                
+                // weather
+                WeatherComponent(weatherUpdated: $weatherUpdated, list: list)
+                    .padding(.horizontal, 15)
+                    .padding(.bottom, 10)
                 
                 HStack(spacing: 15) {
                     
