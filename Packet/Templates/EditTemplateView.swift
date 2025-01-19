@@ -154,7 +154,7 @@ struct EditTemplateView: View {
                                 }
                             }
                         } label: {
-                            Text("\(Image(systemName: "list.clipboard")) \(ignoreCategory ? "Any" : (categoryFilter?.name ?? "(No category)")) \(Image(systemName: "chevron.down"))")
+                            Text("\(Image(systemName: "tag")) \(ignoreCategory ? "Any" : (categoryFilter?.name ?? "(No category)")) \(Image(systemName: "chevron.down"))")
                         }
                         .padding(.vertical, 20)
                         .frame(maxWidth: .infinity)
@@ -221,7 +221,7 @@ struct EditTemplateView: View {
         })
         .sheet(item: $itemToEdit) { data in
             EditTemplateItemView(list: list, item: data)
-            .presentationDetents([.fraction(0.4)])
+            .presentationDetents([.fraction(0.45)])
         }
         .background((Theme(rawValue: theme) ?? .blue).get1())
         .tint(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))

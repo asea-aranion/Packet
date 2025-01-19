@@ -20,6 +20,7 @@ struct ActiveListView: View {
     @State var groupByCategory: Bool = true
     @State var itemToEdit: Item?
     @State var searchText: String = ""
+    @State var itemEditShowingNames: Bool = false
     
     @AppStorage("theme") var theme: Int = 0
     
@@ -266,9 +267,11 @@ struct ActiveListView: View {
                             .padding(.horizontal, 15)
                             .padding(.bottom, 15)
                         }
-                        .popover(item: $itemToEdit) { data in
-                            EditItemView(list: activeList ?? PackingList(), item: data)
-                                .presentationDetents([.fraction(0.4)])
+                        .sheet(item: $itemToEdit, onDismiss: {
+                            itemEditShowingNames = false
+                        }) { data in
+                            EditItemView(showingNames: $itemEditShowingNames, list: activeList ?? PackingList(), item: data)
+                                .presentationDetents([.fraction(itemEditShowingNames ? 0.6 : 0.45)])
                         }
                         .scrollDismissesKeyboard(.immediately)
                     }

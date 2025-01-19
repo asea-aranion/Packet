@@ -79,6 +79,7 @@ struct WeatherComponent: View {
     @State var weatherData: [WeatherData] = []
     @State var attImage: URL?
     @State var attLink: URL?
+    @State var historical: Bool = false
     
     @Binding var weatherUpdated: Bool
     
@@ -92,15 +93,17 @@ struct WeatherComponent: View {
         if (!weatherUpdated) {
             Button {
                 
-                let startPlusDay = Calendar.current.date(byAdding: .day, value: 1, to: list.startDate)!
-                let endPlusDay = Calendar.current.date(byAdding: .day, value: 1, to: list.endDate)!
+                let modifiedStart = Calendar.current.startOfDay(for: list.startDate)
+                let modifiedEnd = Calendar.current.startOfDay(for: Calendar.current.date(byAdding: .day, value: 1, to: list.endDate) ?? Date.distantFuture)
                 
                 // if the trip dates are fewer than 10 days in the future
-                if (Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: Date()), to: endPlusDay).day ?? 0 <= 10) {
+                if (Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: Date()), to: modifiedEnd).day ?? 0 <= 10) {
+                    
+                    historical = false
                     
                     Task {
                         do {
-                            let daily = try await service.weather(for: CLLocation(latitude: list.lat, longitude: list.long), including: .daily(startDate: startPlusDay, endDate: endPlusDay))
+                            let daily = try await service.weather(for: CLLocation(latitude: list.lat, longitude: list.long), including: .daily(startDate: modifiedStart, endDate: modifiedEnd))
                             daily.forecast.forEach { dayWeather in
                                 weatherData.append(WeatherData(date: dayWeather.date, high: dayWeather.highTemperature, low: dayWeather.lowTemperature, condition: dayWeather.condition))
                             }
@@ -114,8 +117,11 @@ struct WeatherComponent: View {
                     
                 }
                 // otherwise, use historical data
-                else if let startLessYear = Calendar.current.date(byAdding: .year, value: -1, to: startPlusDay),
-                        let endLessYear = Calendar.current.date(byAdding: .year, value: -1, to: endPlusDay) {
+                else if let startLessYear = Calendar.current.date(byAdding: .year, value: -1, to: modifiedStart),
+                        let endLessYear = Calendar.current.date(byAdding: .year, value: -1, to: modifiedEnd) {
+                    
+                    historical = true
+                    
                     Task {
                         do {
                             let daily = try await service.weather(for: CLLocation(latitude: list.lat, longitude: list.long), including: .daily(startDate: startLessYear, endDate: endLessYear))
@@ -145,7 +151,21 @@ struct WeatherComponent: View {
             .padding(.bottom, 10)
         }
         else {
+            
+            // display weather
             VStack(alignment: .leading) {
+                
+                HStack {
+                    Text(historical ? "Historical weather" : "Forecast weather")
+                        .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
+                        .frame(height: 5)
+                        .frame(maxWidth: .infinity)
+                }
+                .padding(.top, 10)
+                .padding(.horizontal, 15)
+                
                 ScrollView(.horizontal) {
                     HStack {
                         ForEach(weatherData) { data in
@@ -165,12 +185,13 @@ struct WeatherComponent: View {
                                 }
                                 .bold()
                             }
-                            .padding(.horizontal, 10)
+                            .padding(.horizontal, 8)
                         }
                     }
-                    .padding(.vertical, 10)
+                    .padding(.bottom, 8)
                 }
-                .padding(.horizontal, 10)
+                .padding(.vertical, 5)
+                .padding(.horizontal, 15)
                 
                 // attribution
                 HStack {
@@ -180,12 +201,15 @@ struct WeatherComponent: View {
                             .aspectRatio(contentMode: .fit)
                     }
                     .frame(height: 18)
+                    .padding(.bottom, 2)
+                    
+                    Spacer()
                         
                     if let attLink {
                         Link("Other data sources", destination: attLink)
                     }
                 }
-                .padding(.horizontal, 10)
+                .padding(.horizontal, 15)
                 .padding(.bottom, 10)
                 
             }
@@ -199,7 +223,7 @@ struct WeatherComponent: View {
                 }
                 
             }
-            .frame(maxWidth: .infinity, maxHeight: 180)
+            .frame(maxWidth: .infinity)
             .background(.quinary)
             .clipShape(RoundedRectangle(cornerRadius: 10))
             

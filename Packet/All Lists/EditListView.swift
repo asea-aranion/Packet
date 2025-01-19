@@ -25,6 +25,7 @@ struct EditListView: View {
     @State var ignoreBag: Bool = true
     @State var showDeleteConf: Bool = false
     @State var weatherUpdated: Bool = false
+    @State var itemEditShowingNames: Bool = false
     
     @AppStorage("theme") var theme: Int = 0
     
@@ -91,10 +92,6 @@ struct EditListView: View {
                     .padding(.horizontal, 15)
                     .padding(.bottom, 10)
                 
-                // edit destination and display placemark
-                LocationComponent(list: list)
-                    .padding(.horizontal, 15)
-                
                 // edit start date
                 DatePicker("\(Image(systemName: "calendar")) Departure date", selection: $list.startDate, displayedComponents: .date)
                     .padding(15)
@@ -116,6 +113,10 @@ struct EditListView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 .padding(.bottom, 10)
                 .padding(.horizontal, 15)
+                
+                // edit destination and display placemark
+                LocationComponent(list: list)
+                    .padding(.horizontal, 15)
                 
                 // weather
                 WeatherComponent(weatherUpdated: $weatherUpdated, list: list)
@@ -276,9 +277,11 @@ struct EditListView: View {
         .onAppear {
             selectedColor = Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue)
         }
-        .sheet(item: $itemToEdit) { data in
-            EditItemView(list: list, item: data, duration: Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: list.startDate), to: Calendar.current.startOfDay(for: list.endDate)).day ?? 0)
-                .presentationDetents([.fraction(0.4)])
+        .sheet(item: $itemToEdit, onDismiss: {
+            itemEditShowingNames = false
+        }) { data in
+            EditItemView(showingNames: $itemEditShowingNames, list: list, item: data, duration: Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: list.startDate), to: Calendar.current.startOfDay(for: list.endDate)).day ?? 0)
+                .presentationDetents([.fraction(itemEditShowingNames ? 0.6 : 0.45)])
         }
         .confirmationDialog("Delete this packing list?", isPresented: $showDeleteConf, actions: {
             Button("Delete", role: .destructive) {
