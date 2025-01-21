@@ -226,6 +226,7 @@ struct WeatherComponent: View {
             .frame(maxWidth: .infinity)
             .background(.quinary)
             .clipShape(RoundedRectangle(cornerRadius: 10))
+            .padding(.bottom, 10)
             
         }
         

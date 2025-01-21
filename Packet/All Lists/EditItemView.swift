@@ -12,23 +12,24 @@ struct EditItemView: View {
     
     @Environment(\.dismiss) var dismiss
     
-    @Query var lists: [PackingList]
     @Query var categories: [Category]
     @Query var bags: [Bag]
-    
-    @State var showDeleteConf: Bool = false
-    @State var names: Set<String> = []
-    @Binding var showingNames: Bool
+    @Query var items: [Item]
     
     @Bindable var list: PackingList
     @Bindable var item: Item
+    
+    @State var showDeleteConf: Bool = false
+    @State var names: Set<String> = []
+    
+    @Binding var showingNames: Bool
     
     var duration: Int = 0
     
     var body: some View {
         VStack {
             
-            HStack {
+            HStack(alignment: .top) {
                 
                 // quantity editor
                 VStack(spacing: 0) {
@@ -36,6 +37,7 @@ struct EditItemView: View {
                         item.quantity += 1
                     }
                     .font(.system(size: 24, weight: .bold))
+                    .frame(height: 30)
                     .accessibilityHint("Adds 1 to quantity")
                     Text(String(item.quantity))
                         .bold()
@@ -46,6 +48,7 @@ struct EditItemView: View {
                         item.quantity -= 1
                     }
                     .font(.system(size: 24, weight: .bold))
+                    .frame(height: 30)
                     .accessibilityHint("Subtracts 1 from quantity")
                     .disabled(item.quantity == 1)
                 }
@@ -53,84 +56,61 @@ struct EditItemView: View {
                 
                 // name editor
                 VStack(alignment: .leading, spacing: 0) {
-                    if (showingNames) {
-                        TextField("Category name", text: $item.name)
-                            .multilineTextAlignment(.leading)
-                            .padding(.top, 5)
-                    }
-                    else {
-                        Text(item.name)
-                            .multilineTextAlignment(.leading)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.top, 6)
-                    }
+                    
+                    TextField("Item name", text: $item.name)
+                        .multilineTextAlignment(.leading)
+                        .padding(.top, 5)
                     
                     RoundedRectangle(cornerRadius: 10)
                         .fill(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
                         .frame(height: 5)
-                        .frame(maxWidth: showingNames ? 300 : 0)
+                        .frame(maxWidth: .infinity)
                         .padding(0)
                     
-                }
-                
-                if (showingNames) {
-                    Button {
-                        withAnimation(.easeInOut) {
-                            showingNames = false
-                        }
-                    } label: {
-                        Image(systemName: "checkmark")
-                            .font(.system(size: 20, weight: .heavy))
-                            .padding(.horizontal, 15)
-                            .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
-                    }
-                }
-                else {
-                    Button("Edit") {
-                        withAnimation(.easeInOut) {
-                            showingNames = true
-                            
-                        }
-                    }
-                    .bold()
-                    .padding(.vertical, 5)
-                    .padding(.horizontal, 20)
-                    .background(.quaternary)
-                    .clipShape(Capsule())
-                    .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
-                    .padding(.trailing, 10)
-                }
-                
-            }
-            .padding(.horizontal, 15)
-            .padding(.bottom, 5)
-            
-            // name options/autofill
-            ScrollView {
-                ForEach(names.filter({
-                    item.name.isEmpty || $0.localizedCaseInsensitiveContains(item.name)
-                }), id: \.self) { option in
-                    Button {
-                        item.name = option
-                        withAnimation(.easeInOut) {
-                            showingNames = false
-                        }
-                    } label: {
-                        Text(option)
+                    // name options/autofill
+                    ScrollView {
+                        ForEach(names.filter({
+                            item.name.isEmpty || $0.localizedCaseInsensitiveContains(item.name)
+                        }), id: \.self) { option in
+                            Button {
+                                item.name = option
+                                withAnimation(.easeInOut) {
+                                    showingNames = false
+                                }
+                            } label: {
+                                Text(option)
+                                
+                            }
                             .padding(.leading, 15)
                             .padding(.vertical, 10)
                             .frame(maxWidth: .infinity)
                             .background(.quinary)
                             .clipShape(RoundedRectangle(cornerRadius: 10))
+                        }
                     }
+                    .frame(maxHeight: showingNames ? 140 : 0)
+                    .padding(.top, 8)
                     
                 }
-                .padding(.trailing, 5)
+                .padding(.top, 40)
+                
+                // show names button
+                Button {
+                    withAnimation(.easeInOut) {
+                        showingNames.toggle()
+                    }
+                } label: {
+                    Image(systemName: "chevron.down.circle")
+                        .font(.system(size: 28, weight: .bold))
+                        .padding(.horizontal, 10)
+                        .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
+                        .rotationEffect(Angle(degrees: showingNames ? -90 : 0))
+                }
+                .padding(.top, 40)
+                
             }
-            .frame(maxHeight: showingNames ? 150 : 0)
-            .padding(.leading, 50)
+            .padding(.horizontal, 15)
             .padding(.bottom, 5)
-            .padding(.trailing, 15)
             
             // quantity autoset
             Button {
@@ -138,7 +118,6 @@ struct EditItemView: View {
             } label: {
                 Text("Set quantity to duration (\(duration) nights)")
             }
-            
             .padding(10)
             .frame(maxWidth: .infinity)
             .background(.quinary)
@@ -156,9 +135,7 @@ struct EditItemView: View {
                     }
                     ForEach(categories) { category in
                         Button {
-                            
                             item.category = category
-                            
                         } label: {
                             Text(category.name)
                         }
@@ -201,6 +178,7 @@ struct EditItemView: View {
             }
             .padding(.horizontal, 15)
             
+            // delete with confirmation button
             Button {
                 showDeleteConf = true
             } label: {
@@ -217,17 +195,21 @@ struct EditItemView: View {
             
         }
         .padding(.top, 10)
+        .onAppear {
+            items.forEach {
+                names.insert($0.name)
+            }
+            
+            list.subtractItemNames(&names)
+            
+            names.remove("")
+        }
         .confirmationDialog("Delete this item?", isPresented: $showDeleteConf, actions: {
             Button("Delete", role: .destructive) {
                 list.items?.removeAll(where: {$0.persistentModelID == item.persistentModelID})
                 dismiss()
             }
         })
-        .onAppear {
-            lists.forEach { packingList in
-                names.formUnion(packingList.uniqueItemNames())
-            }
-        }
     }
     
 }

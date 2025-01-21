@@ -17,6 +17,7 @@ struct EditListView: View {
     @Query var bags: [Bag]
     
     @Bindable var list: PackingList
+    
     @State var selectedColor: Color = Color.blue
     @State var itemToEdit: Item?
     @State var categoryFilter: Category? = nil
@@ -121,17 +122,15 @@ struct EditListView: View {
                 // weather
                 WeatherComponent(weatherUpdated: $weatherUpdated, list: list)
                     .padding(.horizontal, 15)
-                    .padding(.bottom, 10)
                 
                 HStack(spacing: 15) {
                     
-                    // duplicate button
+                    // convert to template button
                     Button {
-                        modelContext.insert(PackingList.init(from: list))
-                        path = NavigationPath()
+                        modelContext.insert(TemplateList(from: list))
                         
                     } label: {
-                        Text("\(Image(systemName: "square.on.square")) Duplicate")
+                        Text("\(Image(systemName: "bookmark")) Make Template")
                             .font(.body.bold())
                             .padding(.vertical, 15)
                         
@@ -277,12 +276,15 @@ struct EditListView: View {
         .onAppear {
             selectedColor = Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue)
         }
+        // edit item sheet
         .sheet(item: $itemToEdit, onDismiss: {
             itemEditShowingNames = false
         }) { data in
-            EditItemView(showingNames: $itemEditShowingNames, list: list, item: data, duration: Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: list.startDate), to: Calendar.current.startOfDay(for: list.endDate)).day ?? 0)
+            EditItemView(list: list, item: data, showingNames: $itemEditShowingNames,
+                         duration: Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: list.startDate), to: Calendar.current.startOfDay(for: list.endDate)).day ?? 0)
                 .presentationDetents([.fraction(itemEditShowingNames ? 0.6 : 0.45)])
         }
+        // delete confirmation
         .confirmationDialog("Delete this packing list?", isPresented: $showDeleteConf, actions: {
             Button("Delete", role: .destructive) {
                 modelContext.delete(list)
@@ -291,6 +293,7 @@ struct EditListView: View {
         }, message: {
             Text("This will delete all this list's data and items.")
         })
+        
         .background((Theme(rawValue: theme) ?? .blue).get1())
         .tint(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
         .scrollDismissesKeyboard(.immediately)

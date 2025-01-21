@@ -16,10 +16,21 @@ struct PreferencesView: View {
     @Query var bags: [Bag]
     
     @AppStorage("theme") var theme: Int = 0
+    @AppStorage("startersAdded") var startersAdded: Bool = false
     
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
+                
+                Button("Add starter data on next launch") {
+                    startersAdded = true
+                }
+                    .padding(15)
+                    .frame(maxWidth: .infinity)
+                    .background(.quinary)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .padding(.vertical, 10)
+                    .padding(.horizontal, 15)
                 
                 // theme picker
                 Text("Theme")

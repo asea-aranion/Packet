@@ -15,6 +15,7 @@ struct EditTemplateView: View {
     
     @Query var categories: [Category]
     @Query var bags: [Bag]
+    @Query var templates: [TemplateList]
     
     @Bindable var list: TemplateList
     
@@ -25,6 +26,7 @@ struct EditTemplateView: View {
     @State var selectedColor: Color = .blue
     @State var itemToEdit: Item?
     @State var showDeleteConf: Bool = false
+    @State var itemEditShowingNames: Bool = false
     
     @AppStorage("theme") var theme = 0
     
@@ -219,9 +221,10 @@ struct EditTemplateView: View {
         }, message: {
             Text("This will delete all this template's data and items.")
         })
+        
         .sheet(item: $itemToEdit) { data in
-            EditTemplateItemView(list: list, item: data)
-            .presentationDetents([.fraction(0.45)])
+            EditTemplateItemView(list: list, item: data, showingNames: $itemEditShowingNames)
+            .presentationDetents([.fraction(itemEditShowingNames ? 0.6 : 0.45)])
         }
         .background((Theme(rawValue: theme) ?? .blue).get1())
         .tint(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))

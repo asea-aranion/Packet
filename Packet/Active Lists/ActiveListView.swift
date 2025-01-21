@@ -270,8 +270,10 @@ struct ActiveListView: View {
                         .sheet(item: $itemToEdit, onDismiss: {
                             itemEditShowingNames = false
                         }) { data in
-                            EditItemView(showingNames: $itemEditShowingNames, list: activeList ?? PackingList(), item: data)
-                                .presentationDetents([.fraction(itemEditShowingNames ? 0.6 : 0.45)])
+                            if let activeList {
+                                EditItemView(list: activeList, item: data, showingNames: $itemEditShowingNames)
+                                    .presentationDetents([.fraction(itemEditShowingNames ? 0.6 : 0.45)])
+                            }
                         }
                         .scrollDismissesKeyboard(.immediately)
                     }

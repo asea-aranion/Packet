@@ -43,11 +43,25 @@ class PackingList {
     
     init(from source: TemplateList) {
         self.name = source.name + " copy"
+        self.colorRed = source.colorRed
+        self.colorGreen = source.colorGreen
+        self.colorBlue = source.colorBlue
         
         self.items = [Item]()
         
         source.items?.forEach {
             self.items?.append(Item.init(from: $0))
+        }
+    }
+    
+    func subtractItemNames(_ names: inout Set<String>) {
+        
+        guard let items else {
+            return
+        }
+        
+        items.forEach {
+            names.remove($0.name)
         }
     }
     
