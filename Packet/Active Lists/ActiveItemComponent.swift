@@ -36,9 +36,13 @@ struct ActiveItemComponent: View {
                 itemToEdit = item
             } label: {
                 Text(String(item.quantity))
-                    .frame(minWidth: 40, minHeight: 40)
-                    .background(.quinary)
-                    .clipShape(Circle())
+                    .foregroundStyle(listColor)
+                    .bold()
+                    .frame(minWidth: 34, minHeight: 34)
+                    .overlay {
+                        Circle()
+                            .stroke(listColor, lineWidth: 3)
+                    }
                 Text(item.name)
                     .padding(.horizontal, 3)
                 if (showCategory) {
@@ -52,8 +56,7 @@ struct ActiveItemComponent: View {
             }
             
         }
-        .padding(.horizontal, 10)
-        .padding(.vertical, 5)
+        .padding(10)
         
         
     }

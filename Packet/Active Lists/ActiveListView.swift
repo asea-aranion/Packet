@@ -87,7 +87,7 @@ struct ActiveListView: View {
                                         .font(.system(size: 20, weight: .bold))
                                     Spacer()
                                     VStack {
-                                        Text(String((activeList?.items ?? [Item]())
+                                        Text(String((activeList?.items ?? [])
                                             .count(where: { item in
                                                 !item.checked
                                             })
@@ -106,11 +106,7 @@ struct ActiveListView: View {
                                 .padding(.top, 20)
                                 
                                 // group by picker
-                                Picker("Group by", selection: $groupByCategory) {
-                                    Text("Category").tag(true)
-                                    Text("Bag").tag(false)
-                                }
-                                .pickerStyle(.segmented)
+                                GroupPickerComponent(groupByCategory: $groupByCategory)
                                 .padding(.vertical, 10)
                                 
                                 // search items
@@ -154,7 +150,7 @@ struct ActiveListView: View {
                                             .padding(.top, 20)
                                         
                                         VStack {
-                                            ForEach((activeList?.items ?? [Item]())
+                                            ForEach((activeList?.items ?? [])
                                                 .filter({
                                                     if (searchText.isEmpty || $0.name.localizedCaseInsensitiveContains(searchText)),
                                                     let category = $0.category {
@@ -187,7 +183,7 @@ struct ActiveListView: View {
                                             .padding(.top, 20)
                                         
                                         VStack {
-                                            ForEach((activeList?.items ?? [Item]())
+                                            ForEach((activeList?.items ?? [])
                                                 .filter({
                                                     (searchText.isEmpty || $0.name.localizedCaseInsensitiveContains(searchText)) && $0.category == nil
                                                 })) { item in
@@ -218,7 +214,7 @@ struct ActiveListView: View {
                                             .padding(.top, 20)
                                         
                                         VStack {
-                                            ForEach((activeList?.items ?? [Item]())
+                                            ForEach((activeList?.items ?? [])
                                                 .filter({
                                                     if (searchText.isEmpty || $0.name.localizedCaseInsensitiveContains(searchText)),
                                                     let bag = $0.bag {
@@ -251,7 +247,7 @@ struct ActiveListView: View {
                                             .padding(.top, 20)
                                         
                                         VStack {
-                                            ForEach((activeList?.items ?? [Item]())
+                                            ForEach((activeList?.items ?? [])
                                                 .filter({
                                                     (searchText.isEmpty || $0.name.localizedCaseInsensitiveContains(searchText)) && $0.bag == nil
                                                 })) { item in

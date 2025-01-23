@@ -253,7 +253,7 @@ struct EditListView: View {
                 .padding(.bottom, 10)
                 
                 // items in list
-                VStack(alignment: .leading) {
+                LazyVStack(alignment: .leading) {
                     ForEach((list.items ?? [])
                         .filter({
                             (ignoreCategory || $0.category == categoryFilter)
