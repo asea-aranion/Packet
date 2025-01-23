@@ -21,6 +21,7 @@ struct EditItemView: View {
     
     @State var showDeleteConf: Bool = false
     @State var names: Set<String> = []
+    @State var namesPopulated: Bool = false
     
     @Binding var showingNames: Bool
     
@@ -37,18 +38,18 @@ struct EditItemView: View {
                         item.quantity += 1
                     }
                     .font(.system(size: 24, weight: .bold))
-                    .frame(height: 30)
+                    .padding(.bottom, 10)
                     .accessibilityHint("Adds 1 to quantity")
                     Text(String(item.quantity))
                         .bold()
-                        .padding(15)
+                        .frame(minWidth: 40, minHeight: 40)
                         .background(.quinary)
                         .clipShape(Circle())
                     Button("-") {
                         item.quantity -= 1
                     }
                     .font(.system(size: 24, weight: .bold))
-                    .frame(height: 30)
+                    .padding(.top, 10)
                     .accessibilityHint("Subtracts 1 from quantity")
                     .disabled(item.quantity == 1)
                 }
@@ -68,30 +69,50 @@ struct EditItemView: View {
                         .padding(0)
                     
                     // name options/autofill
-                    ScrollView {
-                        ForEach(names.filter({
-                            item.name.isEmpty || $0.localizedCaseInsensitiveContains(item.name)
-                        }), id: \.self) { option in
-                            Button {
-                                item.name = option
-                                withAnimation(.easeInOut) {
-                                    showingNames = false
+                    if (showingNames) {
+                        ScrollView {
+                            // checks that names have been populated to avoid unnecessary UI updates
+                            if (namesPopulated) {
+                                ForEach(names.filter({
+                                    item.name.isEmpty || $0.localizedCaseInsensitiveContains(item.name)
+                                }), id: \.self) { option in
+                                    Button {
+                                        item.name = option
+                                        withAnimation(.easeInOut) {
+                                            showingNames = false
+                                        }
+                                    } label: {
+                                        Text(option)
+                                    }
+                                    .padding(.leading, 15)
+                                    .padding(.vertical, 10)
+                                    .frame(maxWidth: .infinity)
+                                    .background(.quinary)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
                                 }
-                            } label: {
-                                Text(option)
-                                
                             }
-                            .padding(.leading, 15)
-                            .padding(.vertical, 10)
-                            .frame(maxWidth: .infinity)
-                            .background(.quinary)
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
                         }
+                        .onAppear {
+                            // ensures names are only populated once
+                            if (!namesPopulated) {
+                                items.forEach {
+                                    names.insert($0.name)
+                                }
+                                
+                                list.subtractItemNames(&names)
+                                
+                                names.remove("")
+                                
+                                // signals that population is complete and ForEach can be shown
+                                namesPopulated = true
+                            }
+                        }
+                        .frame(maxHeight: 140)
+                        .padding(.top, 8)
                     }
-                    .frame(maxHeight: showingNames ? 140 : 0)
-                    .padding(.top, 8)
                     
                 }
+                // aligns textfield with quantity editor
                 .padding(.top, 40)
                 
                 // show names button
@@ -195,15 +216,6 @@ struct EditItemView: View {
             
         }
         .padding(.top, 10)
-        .onAppear {
-            items.forEach {
-                names.insert($0.name)
-            }
-            
-            list.subtractItemNames(&names)
-            
-            names.remove("")
-        }
         .confirmationDialog("Delete this item?", isPresented: $showDeleteConf, actions: {
             Button("Delete", role: .destructive) {
                 list.items?.removeAll(where: {$0.persistentModelID == item.persistentModelID})

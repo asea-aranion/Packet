@@ -217,7 +217,7 @@ struct EditListView: View {
                             }
                         }
                     } label: {
-                        Text("\(Image(systemName: "tag")) \(ignoreCategory ? "Any" : (categoryFilter?.name ?? "(No category)")) \(Image(systemName: "chevron.down"))")
+                        Text("\(Image(systemName: "tag.fill")) \(ignoreCategory ? "Any" : (categoryFilter?.name ?? "(No category)")) \(Image(systemName: "chevron.down"))")
                     }
                     .padding(.vertical, 20)
                     .frame(maxWidth: .infinity)
@@ -240,7 +240,7 @@ struct EditListView: View {
                             }
                         }
                     } label: {
-                        Text("\(Image(systemName: "bag")) \(ignoreBag ? "Any" : (bagFilter?.name ?? "(No bag)")) \(Image(systemName: "chevron.down"))")
+                        Text("\(Image(systemName: "bag.fill")) \(ignoreBag ? "Any" : (bagFilter?.name ?? "(No bag)")) \(Image(systemName: "chevron.down"))")
                     }
                     .padding(.vertical, 20)
                     .frame(maxWidth: .infinity)
@@ -262,7 +262,7 @@ struct EditListView: View {
                             Button {
                                 itemToEdit = item
                             } label: {
-                                ItemComponent(item: item)
+                                ItemComponent(item: item, listColor: selectedColor)
                             }
                             .buttonStyle(.plain)
                             .padding(.vertical, 5)

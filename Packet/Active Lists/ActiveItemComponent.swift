@@ -22,7 +22,7 @@ struct ActiveItemComponent: View {
         
         HStack {
             Button {
-                withAnimation(.linear(duration: 0.1)) {
+                withAnimation(.linear(duration: 0.05)) {
                     item.checked.toggle()
                 }
             } label: {
@@ -36,7 +36,7 @@ struct ActiveItemComponent: View {
                 itemToEdit = item
             } label: {
                 Text(String(item.quantity))
-                    .padding(10)
+                    .frame(minWidth: 40, minHeight: 40)
                     .background(.quinary)
                     .clipShape(Circle())
                 Text(item.name)

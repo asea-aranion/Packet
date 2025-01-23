@@ -16,28 +16,17 @@ struct PreferencesView: View {
     @Query var bags: [Bag]
     
     @AppStorage("theme") var theme: Int = 0
-    @AppStorage("startersAdded") var startersAdded: Bool = false
     
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
                 
-                Button("Add starter data on next launch") {
-                    startersAdded = true
-                }
-                    .padding(15)
-                    .frame(maxWidth: .infinity)
-                    .background(.quinary)
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                    .padding(.vertical, 10)
-                    .padding(.horizontal, 15)
-                
                 // theme picker
                 Text("Theme")
                     .font(.system(size: 20, weight: .bold))
                     .foregroundStyle((Theme(rawValue: theme) ?? .blue).get1())
-                    .padding([.leading, .trailing], 30)
-                    .padding([.top, .bottom], 15)
+                    .padding(.horizontal, 30)
+                    .padding(.vertical, 15)
                     .background((Theme(rawValue: theme) ?? .blue).get2())
                     .clipShape(UnevenRoundedRectangle(cornerRadii:
                             .init(topLeading: 10, bottomLeading: 0, bottomTrailing: 0, topTrailing: 10)))
@@ -64,7 +53,7 @@ struct PreferencesView: View {
                             .padding(10)
                         }
                 }
-                .padding([.leading, .trailing], 15)
+                .padding(.horizontal, 15)
                 
                 // category editor
                 Text("Categories")
@@ -95,7 +84,7 @@ struct PreferencesView: View {
                     
                     .frame(height: 60)
                     .padding(.top, 10)
-                    .padding([.leading, .trailing], 15)
+                    .padding(.horizontal, 15)
                 }
                 .buttonStyle(.plain)
                 .foregroundStyle((Theme(rawValue: theme) ?? .blue).get2())
@@ -109,8 +98,8 @@ struct PreferencesView: View {
                 Text("Bags")
                     .font(.system(size: 20, weight: .bold))
                     .foregroundStyle((Theme(rawValue: theme) ?? .blue).get1())
-                    .padding([.leading, .trailing], 30)
-                    .padding([.top, .bottom], 15)
+                    .padding(.horizontal, 30)
+                    .padding(.vertical, 15)
                     .background((Theme(rawValue: theme) ?? .blue).get2())
                     .clipShape(UnevenRoundedRectangle(cornerRadii:
                             .init(topLeading: 10, bottomLeading: 0, bottomTrailing: 0, topTrailing: 10)))
@@ -134,7 +123,7 @@ struct PreferencesView: View {
                     
                     .frame(height: 60)
                     .padding(.top, 10)
-                    .padding([.leading, .trailing], 15)
+                    .padding(.horizontal, 15)
                 }
                 .buttonStyle(.plain)
                 .foregroundStyle((Theme(rawValue: theme) ?? .blue).get2())

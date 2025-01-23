@@ -10,7 +10,7 @@ import SwiftUI
 enum Theme: Int, CaseIterable {
     case blue = 0
     case green
-    case purple
+    case red
     case yellow
     
     func get1() -> Color {
@@ -19,8 +19,10 @@ enum Theme: Int, CaseIterable {
             return Color("Blue1")
         case .green:
             return Color("Green1")
-        default:
-            return Color.clear
+        case .red:
+            return Color("Red1")
+        case .yellow:
+            return Color("Yellow1")
             
         }
     }
@@ -31,8 +33,10 @@ enum Theme: Int, CaseIterable {
             return Color("Blue2")
         case .green:
             return Color("Green2")
-        default:
-            return Color.clear
+        case .red:
+            return Color("Red2")
+        case .yellow:
+            return Color("Yellow2")
             
         }
     }

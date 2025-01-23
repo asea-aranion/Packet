@@ -12,28 +12,35 @@ struct ItemComponent: View {
     @AppStorage("theme") var theme = 0
     
     var item: Item
+    var listColor: Color
     
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
                 Text(String(item.quantity))
-                    .padding(10)
-                    .background(.quaternary)
-                    .clipShape(Circle())
+                    .foregroundStyle(listColor)
+                    .bold()
+                    .frame(minWidth: 34, minHeight: 34)
+                    .overlay {
+                        Circle()
+                            .stroke(listColor, lineWidth: 3)
+                    }
                 Text(item.name)
                     .padding(.leading, 3)
                 Spacer()
             }
-            HStack(spacing: 10) {
-                Text("\(Image(systemName: "tag")) \(item.category?.name ?? "(No category)")")
-                Text("\(Image(systemName: "bag")) \(item.bag?.name ?? "(No bag)")")
+            .padding(.vertical, 5)
+            HStack(spacing: 15) {
+                Text("\(Image(systemName: "tag.fill")) \(item.category?.name ?? "(No category)")")
+                Text("\(Image(systemName: "bag.fill")) \(item.bag?.name ?? "(No bag)")")
                 Spacer()
             }
             .foregroundStyle((Theme(rawValue: theme) ?? .blue).get2())
+            .padding(.bottom, 5)
         }
         .frame(maxWidth: .infinity)
-        .padding(10)
-        .padding(.bottom, 5)
+        .padding(.vertical, 10)
+        .padding(.horizontal, 15)
         .background(.quinary)
         .clipShape(RoundedRectangle(cornerRadius: 10))
         

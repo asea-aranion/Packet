@@ -52,6 +52,7 @@ struct ContentView: View {
         }
         .onAppear {
             
+            // add starter templates, categories, and bags if not already added
             if (!startersAdded) {
                 startersAdded = true
                 
@@ -84,11 +85,33 @@ struct ContentView: View {
                         Item(name: "Swimsuits", quantity: 2, bag: carry, category: clothing),
                         Item(name: "Flip-flops", quantity: 1, bag: carry, category: clothing),
                         Item(name: "Sunblock", quantity: 1, bag: checked, category: toiletries),
-                        Item(name: "Sunglasses", quantity: 1, bag: personal, category: accessories)
+                        Item(name: "Sunglasses", quantity: 1, bag: personal, category: accessories),
+                        Item(name: "Hat", quantity: 1, bag: personal, category: accessories)
+                    ]
+                )
+                
+                let ski = TemplateList(
+                    name: "Ski Vacation",
+                    colorRed: 130 / 255,
+                    colorGreen: 108 / 255,
+                    colorBlue: 240 / 255,
+                    items: [
+                        Item(name: "Snow Pants", quantity: 5, bag: checked, category: clothing),
+                        Item(name: "Sweaters", quantity: 4, bag: checked, category: clothing),
+                        Item(name: "Turtlenecks", quantity: 2, bag: carry, category: accessories),
+                        Item(name: "Snow Jacket", quantity: 1, bag: checked, category: clothing),
+                        Item(name: "Snow Boots", quantity: 1, bag: checked, category: clothing),
+                        Item(name: "Sunblock", quantity: 1, bag: checked, category: toiletries),
+                        Item(name: "Ski Goggles", quantity: 1, bag: checked, category: accessories),
+                        Item(name: "Gloves", quantity: 2, bag: checked, category: accessories),
+                        Item(name: "Warm Socks", quantity: 5, bag: carry, category: accessories),
+                        Item(name: "Base Layers", quantity: 5, bag: carry, category: accessories),
+                        Item(name: "Scarf", quantity: 1, bag: checked, category: accessories)
                     ]
                 )
                 
                 modelContext.insert(beach)
+                modelContext.insert(ski)
             }
         }
         .toolbarBackground((Theme(rawValue: theme) ?? .blue).get1(), for: .tabBar)

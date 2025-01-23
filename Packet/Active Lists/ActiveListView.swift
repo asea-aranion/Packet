@@ -57,7 +57,7 @@ struct ActiveListView: View {
                             }
                         } label: {
                             Image(systemName: "chevron.down.circle")
-                                .font(.system(size: 24, weight: .bold))
+                                .font(.system(size: 28, weight: .bold))
                                 .foregroundStyle((Theme(rawValue: theme) ?? .blue).get2())
                         }
                     }
