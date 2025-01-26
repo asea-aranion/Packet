@@ -109,7 +109,7 @@ struct LocationComponent: View {
                         .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
                 } else {
                     Image(systemName: "checkmark")
-                        .font(.system(size: 20, weight: .heavy))
+                        .font(.system(size: 20, weight: .bold))
                         .padding(.horizontal, 15)
                         .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
                 }

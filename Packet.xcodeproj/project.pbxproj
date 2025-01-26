@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		44DC99802D46F95C000A1E99 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44DC997F2D46F95C000A1E99 /* CloudKit.framework */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		448A7D332D19D585009BE119 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,11 +31,25 @@
 		448A7D222D19D583009BE119 /* Packet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Packet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		448A7D322D19D585009BE119 /* PacketTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PacketTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		448A7D3C2D19D585009BE119 /* PacketUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PacketUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		44DC997F2D46F95C000A1E99 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		44DC997D2D46E3E6000A1E99 /* Exceptions for "Packet" folder in "Packet" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 448A7D212D19D583009BE119 /* Packet */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		448A7D242D19D583009BE119 /* Packet */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				44DC997D2D46E3E6000A1E99 /* Exceptions for "Packet" folder in "Packet" target */,
+			);
 			path = Packet;
 			sourceTree = "<group>";
 		};
@@ -52,6 +70,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				44DC99802D46F95C000A1E99 /* CloudKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +97,7 @@
 				448A7D242D19D583009BE119 /* Packet */,
 				448A7D352D19D585009BE119 /* PacketTests */,
 				448A7D3F2D19D585009BE119 /* PacketUITests */,
+				44DC997E2D46F95C000A1E99 /* Frameworks */,
 				448A7D232D19D583009BE119 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -90,6 +110,14 @@
 				448A7D3C2D19D585009BE119 /* PacketUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		44DC997E2D46F95C000A1E99 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				44DC997F2D46F95C000A1E99 /* CloudKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -400,6 +428,7 @@
 				DEVELOPMENT_TEAM = 4X27SQGVCG;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Packet/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -430,6 +459,7 @@
 				DEVELOPMENT_TEAM = 4X27SQGVCG;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Packet/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

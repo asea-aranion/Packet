@@ -34,13 +34,13 @@ struct BagEditComponent: View {
                 
                 if (bag.inEditMode) {
                     TextField("Bag name", text: $bag.name)
-                        .font(.system(size: 18, weight: .bold))
+                        .font(.title3)
                         .multilineTextAlignment(.leading)
                         .padding(.top, 5)
                 }
                 else {
                     Text(bag.name)
-                        .font(.system(size: 18, weight: .bold))
+                        .font(.title3)
                         .multilineTextAlignment(.leading)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.top, 6)
@@ -62,7 +62,7 @@ struct BagEditComponent: View {
                     }
                 } label: {
                     Image(systemName: "checkmark")
-                        .font(.system(size: 20, weight: .heavy))
+                        .font(.system(size: 20, weight: .bold))
                         .padding(.horizontal, 15)
                         .foregroundStyle((Theme(rawValue: theme) ?? .blue).get2())
                 }
@@ -75,7 +75,7 @@ struct BagEditComponent: View {
                 } label: {
                     Image(systemName: "trash")
                         .foregroundStyle(.red)
-                        .font(.system(size: 20, weight: .heavy))
+                        .font(.system(size: 20, weight: .bold))
                         .padding(.horizontal, 10)
                 }
             }

@@ -12,6 +12,7 @@ class Category {
     
     var name: String = ""
     var inEditMode: Bool = false
+    var items: [Item]?
     
     init(name: String) {
         self.name = name

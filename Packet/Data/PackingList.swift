@@ -16,7 +16,7 @@ class PackingList {
     var colorRed: Double = 71 / 255
     var colorGreen: Double = 159 / 255
     var colorBlue: Double = 211 / 255
-    @Relationship(deleteRule: .cascade) var items: [Item]?
+    @Relationship(deleteRule: .cascade, inverse: \Item.packingList) var items: [Item]?
     var active: Bool = false
     var activeSelected: Bool = false
     var startDate: Date = Date()

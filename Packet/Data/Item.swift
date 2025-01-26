@@ -13,8 +13,10 @@ class Item {
     var name: String = ""
     var quantity: Int = 1
     var checked: Bool = false
-    @Relationship var bag: Bag?
-    @Relationship var category: Category?
+    @Relationship(inverse: \Bag.items) var bag: Bag?
+    @Relationship(inverse: \Category.items) var category: Category?
+    var packingList: PackingList?
+    var templateList: TemplateList?
     
     init() {
         

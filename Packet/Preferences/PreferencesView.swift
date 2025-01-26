@@ -23,7 +23,7 @@ struct PreferencesView: View {
                 
                 // theme picker
                 Text("Theme")
-                    .font(.system(size: 20, weight: .bold))
+                    .font(.title3).bold()
                     .foregroundStyle((Theme(rawValue: theme) ?? .blue).get1())
                     .padding(.horizontal, 30)
                     .padding(.vertical, 15)
@@ -57,7 +57,7 @@ struct PreferencesView: View {
                 
                 // category editor
                 Text("Categories")
-                    .font(.system(size: 20, weight: .bold))
+                    .font(.title3).bold()
                     .foregroundStyle((Theme(rawValue: theme) ?? .blue).get1())
                     .padding([.leading, .trailing], 30)
                     .padding([.top, .bottom], 15)
@@ -71,23 +71,9 @@ struct PreferencesView: View {
                     modelContext.insert(Category(name: "New Category"))
                         
                 } label: {
-                    VStack(alignment: .leading) {
-                        
-                            Text("\(Image(systemName: "plus.circle")) Add Category")
-                                .font(.system(size: 18, weight: .bold))
-                        
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill((Theme(rawValue: theme) ?? .blue).get2())
-                            .frame(height: 8)
-                        
-                    }
-                    
-                    .frame(height: 60)
-                    .padding(.top, 10)
-                    .padding(.horizontal, 15)
+                    AddLabelComponent(color: (Theme(rawValue: theme) ?? .blue).get2(), text: "Add Category")
                 }
                 .buttonStyle(.plain)
-                .foregroundStyle((Theme(rawValue: theme) ?? .blue).get2())
                 
                 ForEach(categories.sorted(by: {$0.name < $1.name})) { category in
                     CategoryEditComponent(category: category)
@@ -96,7 +82,7 @@ struct PreferencesView: View {
                 
                 // bag editor
                 Text("Bags")
-                    .font(.system(size: 20, weight: .bold))
+                    .font(.title3).bold()
                     .foregroundStyle((Theme(rawValue: theme) ?? .blue).get1())
                     .padding(.horizontal, 30)
                     .padding(.vertical, 15)
@@ -110,23 +96,9 @@ struct PreferencesView: View {
                     modelContext.insert(Bag(name: "New Bag"))
                         
                 } label: {
-                    VStack(alignment: .leading) {
-                        
-                            Text("\(Image(systemName: "plus.circle")) Add Bag")
-                                .font(.system(size: 18, weight: .bold))
-                        
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill((Theme(rawValue: theme) ?? .blue).get2())
-                            .frame(height: 8)
-                        
-                    }
-                    
-                    .frame(height: 60)
-                    .padding(.top, 10)
-                    .padding(.horizontal, 15)
+                    AddLabelComponent(color: ((Theme(rawValue: theme) ?? .blue).get2()), text: "Add Bag")
                 }
                 .buttonStyle(.plain)
-                .foregroundStyle((Theme(rawValue: theme) ?? .blue).get2())
                 
                 ForEach(bags.sorted(by: {$0.name < $1.name})) { bag in
                     BagEditComponent(bag: bag)

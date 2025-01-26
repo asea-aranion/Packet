@@ -20,17 +20,17 @@ struct EditTemplateItemView: View {
     @Bindable var item: Item
     
     @State var showDeleteConf: Bool = false
-    @State var names: Set<String> = []
-    @State var namesPopulated: Bool = false
+    @State var names: Set<String> = [] // will be filled with unique names of items in other lists and templates
+    @State var namesPopulated: Bool = false // condition for displaying set of names in UI
     
-    @Binding var showingNames: Bool
+    @Binding var showingNames: Bool // when set by user input, begins name population and increases sheet height
     
     var body: some View {
         VStack {
             
             HStack(alignment: .top) {
                 
-                // quantity editor
+                // MARK: Quantity editor
                 VStack(spacing: 0) {
                     Button("+") {
                         item.quantity += 1
@@ -53,7 +53,7 @@ struct EditTemplateItemView: View {
                 }
                 .padding(.trailing, 5)
                 
-                // name editor
+                // MARK: Item name editor
                 VStack(alignment: .leading, spacing: 0) {
                     
                     TextField("Item name", text: $item.name)
@@ -66,22 +66,26 @@ struct EditTemplateItemView: View {
                         .frame(maxWidth: .infinity)
                         .padding(0)
                     
-                    // name options/autofill
+                    // if user has pressed button to show autofill options
                     if (showingNames) {
+                        // MARK: Item name autofill option list
                         ScrollView {
                             // checks that names have been populated to avoid unnecessary UI updates
                             if (namesPopulated) {
                                 ForEach(names.filter({
+                                    // shows all names if no starting text has been entered as this item's name
                                     item.name.isEmpty || $0.localizedCaseInsensitiveContains(item.name)
                                 }), id: \.self) { option in
                                     Button {
+                                        // autofills item name with selection and closes name list
                                         item.name = option
                                         withAnimation(.easeInOut) {
                                             showingNames = false
                                         }
+                                    // only tapping the text selects the name, to prevent accidental selection
+                                    // while scrolling
                                     } label: {
                                         Text(option)
-                                        
                                     }
                                     .padding(.leading, 15)
                                     .padding(.vertical, 10)
@@ -92,14 +96,18 @@ struct EditTemplateItemView: View {
                             }
                         }
                         .onAppear {
-                            // ensures names are only populated once
+                            // checks to ensure names are only populated once
                             if (!namesPopulated) {
                                 items.forEach {
                                     names.insert($0.name)
                                 }
                                 
+                                // removes all elements in names that are in this list,
+                                // as the user is unlikely to add duplicate items in the same list
                                 list.subtractItemNames(&names)
                                 
+                                // removes the empty string (the default new item name) if it was added,
+                                // as the user is unlikely to intentionally add a blank name
                                 names.remove("")
                                 
                                 // signals that population is complete and ForEach can be shown
@@ -111,9 +119,10 @@ struct EditTemplateItemView: View {
                     }
                     
                 }
+                // aligns textfield with quantity editor
                 .padding(.top, 40)
                 
-                // show names button
+                // MARK: Button to show name list
                 Button {
                     withAnimation(.easeInOut) {
                         showingNames.toggle()
@@ -132,7 +141,7 @@ struct EditTemplateItemView: View {
             .padding(.bottom, 5)
             
             HStack(spacing: 15) {
-                // category picker
+                // MARK: Menu picker for item category
                 Menu {
                     Button {
                         item.category = nil
@@ -157,7 +166,7 @@ struct EditTemplateItemView: View {
                 .background(.quinary)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 
-                // bag picker
+                // MARK: Menu picker for item bag
                 Menu {
                     Button {
                         item.bag = nil
@@ -184,7 +193,7 @@ struct EditTemplateItemView: View {
             }
             .padding(.horizontal, 15)
             
-            // delete with confirmation button
+            // MARK: Button to delete item
             Button {
                 showDeleteConf = true
             } label: {
@@ -201,15 +210,7 @@ struct EditTemplateItemView: View {
             
         }
         .padding(.top, 10)
-        .onAppear {
-            items.forEach {
-                names.insert($0.name)
-            }
-            
-            list.subtractItemNames(&names)
-            
-            names.remove("")
-        }
+        // item delete confirmation
         .confirmationDialog("Delete this item?", isPresented: $showDeleteConf, actions: {
             Button("Delete", role: .destructive) {
                 list.items?.removeAll(where: {$0.persistentModelID == item.persistentModelID})
@@ -217,4 +218,5 @@ struct EditTemplateItemView: View {
             }
         })
     }
+    
 }

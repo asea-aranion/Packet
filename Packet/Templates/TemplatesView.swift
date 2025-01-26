@@ -27,22 +27,9 @@ struct TemplatesView: View {
                         modelContext.insert(newTemplate)
                         path.append(newTemplate)
                     } label: {
-                        VStack(alignment: .leading) {
-                            Text("\(Image(systemName: "plus.circle")) Add Template")
-                                .font(.system(size: 18, weight: .bold))
-                            
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill((Theme(rawValue: theme) ?? .blue).get2())
-                                .frame(height: 8)
-                            
-                        }
-                        
-                        .frame(height: 60)
-                        .padding(.top, 10)
-                        .padding(.horizontal, 15)
+                        AddLabelComponent(color: ((Theme(rawValue: theme) ?? .blue).get2()), text: "Add Template")
                     }
                     .buttonStyle(.plain)
-                    .foregroundStyle((Theme(rawValue: theme) ?? .blue).get2())
                     
                     ForEach(templates) { template in
                         TemplateComponent(list: template, path: $path)

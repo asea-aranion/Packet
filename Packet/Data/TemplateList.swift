@@ -14,7 +14,7 @@ class TemplateList {
     var colorRed: Double = 71 / 255
     var colorGreen: Double = 159 / 255
     var colorBlue: Double = 211 / 255
-    @Relationship(deleteRule: .cascade) var items: [Item]?
+    @Relationship(deleteRule: .cascade, inverse: \Item.templateList) var items: [Item]?
     
     func subtractItemNames(_ names: inout Set<String>) {
         

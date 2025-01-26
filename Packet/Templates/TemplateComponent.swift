@@ -26,7 +26,8 @@ struct TemplateComponent: View {
             HStack(alignment: .center) {
                 VStack(alignment: .leading, spacing: 0) {
                     Text(list.name)
-                        .font(.system(size: 20, weight: .bold))
+                        .font(.title2)
+                        .bold()
                         .padding(.bottom, 5)
                     
                 }

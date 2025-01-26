@@ -28,11 +28,12 @@ struct ListComponent: View {
                 HStack(alignment: .center) {
                     VStack(alignment: .leading, spacing: 0) {
                         Text(list.name)
-                            .font(.system(size: 20, weight: .bold))
+                            .font(.title2)
+                            .bold()
                             .padding(.bottom, 5)
                         
                         Text(list.startDate.formatted(date: .abbreviated, time: .omitted) + " - " + list.endDate.formatted(date: .abbreviated, time: .omitted))
-                            .font(.system(size: 18))
+                            .font(.title3)
                     }
                     .padding(.leading, 15)
                     

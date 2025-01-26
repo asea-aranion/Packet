@@ -44,22 +44,9 @@ struct ListsView: View {
                         }
                         
                     } label: {
-                        VStack(alignment: .leading) {
-                            Text("\(Image(systemName: "plus.circle")) Add List")
-                                .font(.system(size: 18, weight: .bold))
-                            
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill((Theme(rawValue: theme) ?? .blue).get2())
-                                .frame(height: 8)
-                            
-                        }
-                        
-                        .frame(height: 60)
-                        .padding(.top, 10)
-                        .padding(.horizontal, 15)
+                        AddLabelComponent(color: ((Theme(rawValue: theme) ?? .blue).get2()), text: "Add List")
                     }
                     .buttonStyle(.plain)
-                    .foregroundStyle((Theme(rawValue: theme) ?? .blue).get2())
                     
                     ForEach(lists) { list in
                         ListComponent(list: list, path: $path, inDuplicateMode: $inDuplicateMode)

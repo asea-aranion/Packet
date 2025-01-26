@@ -40,7 +40,7 @@ struct EditTemplateView: View {
                 TextField("Template name", text: $list.name)
                     .multilineTextAlignment(.center)
                     .textFieldStyle(.plain)
-                    .font(.system(size: 24, weight: .bold))
+                    .font(.title).bold()
                     .padding(5)
                     .background((Theme(rawValue: theme) ?? .blue).get1())
                     .clipShape(RoundedRectangle(cornerRadius: 6))
@@ -107,7 +107,7 @@ struct EditTemplateView: View {
                 // view and edit list items
                 Text("Items")
                     .foregroundStyle((Theme(rawValue: theme) ?? .blue).get1())
-                    .font(.system(size: 20, weight: .bold))
+                    .font(.title3).bold()
                     .padding(.horizontal, 30)
                     .padding(.vertical, 15)
                     .background(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
@@ -121,22 +121,9 @@ struct EditTemplateView: View {
                     list.items?.append(newItem)
                     itemToEdit = newItem
                 } label: {
-                    VStack(alignment: .leading) {
-                        Text("\(Image(systemName: "plus.circle")) Add Item")
-                            .font(.system(size: 18, weight: .bold))
-                        
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
-                            .frame(height: 8)
-                        
-                    }
-                    
-                    .frame(height: 60)
-                    .padding(.top, 10)
-                    .padding(.horizontal, 15)
+                    AddLabelComponent(color: Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue), text: "Add Item")
                 }
                 .buttonStyle(.plain)
-                .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
                 
                 // item filters
                     HStack(spacing: 15) {
