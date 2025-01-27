@@ -22,21 +22,22 @@ struct EditListView: View {
     @State var itemToEdit: Item?
     @State var categoryFilter: Category? = nil
     @State var bagFilter: Bag? = nil
-    @State var ignoreCategory: Bool = true
-    @State var ignoreBag: Bool = true
+    @State var ignoreCategory: Bool = true // sets picker to Any category
+    @State var ignoreBag: Bool = true // sets picker to Any bag
     @State var showDeleteConf: Bool = false
-    @State var weatherUpdated: Bool = false
-    @State var itemEditShowingNames: Bool = false
+    @State var weatherUpdated: Bool = false // shows Load Weather button when false, weather display when true
+    @State var itemEditShowingNames: Bool = false // allows height of editing sheet to change based on
+                                                  // whether name autofill options are displayed
     
     @AppStorage("theme") var theme: Int = 0
     
-    @Binding var path: NavigationPath
+    @Binding var path: NavigationPath // allows resetting of path when list is deleted or duplicated
     
     var body: some View {
         ScrollView {
-            VStack(alignment: .center) {
+            VStack(alignment: .leading) {
                 
-                // edit list name
+                // MARK: List name textfield
                 TextField("Packing list name", text: $list.name)
                     .multilineTextAlignment(.center)
                     .textFieldStyle(.plain)
@@ -50,36 +51,76 @@ struct EditListView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 10))
                     .padding(15)
                 
-                // toggle active
-                Button {
-                    withAnimation(.easeInOut(duration: 0.1)) {
-                        list.active.toggle()
+                // MARK: Buttons to toggle active and archived
+                HStack(spacing: 15) {
+                    
+                    // can only activate list if it is not archived
+                    if (!list.archived) {
+                        Button {
+                            withAnimation(.easeInOut(duration: 0.1)) {
+                                list.active.toggle()
+                            }
+                        } label: {
+                            if (list.active) {
+                                Text("\(Image(systemName: "checkmark")) Active")
+                                    .bold()
+                                    .padding(.vertical, 15)
+                                    .frame(maxWidth: .infinity)
+                                    .background(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
+                                    .clipShape(Capsule())
+                                    .foregroundStyle(.white)
+                            }
+                            else {
+                                Text("\(Image(systemName: "xmark")) Inactive")
+                                    .bold()
+                                    .padding(.vertical, 15)
+                                    .frame(maxWidth: .infinity)
+                                    .background(.quinary)
+                                    .clipShape(Capsule())
+                                    .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
+                            }
+                        }
                     }
-                } label: {
-                    if (list.active) {
-                        Text("\(Image(systemName: "checkmark")) Active")
-                            .bold()
-                            .padding(.vertical, 15)
-                            .padding(.horizontal, 20)
-                            .background(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
-                            .clipShape(Capsule())
-                            .foregroundStyle(.white)
-                    }
-                    else {
-                        Text("\(Image(systemName: "xmark")) Inactive")
-                            .bold()
-                            .padding(.vertical, 15)
-                            .padding(.horizontal, 20)
-                            .background(.quinary)
-                            .clipShape(Capsule())
-                            .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
+                    
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.1)) {
+                            if (!list.archived) {
+                                list.activeSelected = false
+                                list.active = false
+                                list.archived = true
+                            } else {
+                                list.archived = false
+                            }
+                        }
+                    } label: {
+                        if (!list.archived) {
+                            Text("\(Image(systemName: "square.stack.3d.up")) Unarchived")
+                                .bold()
+                                .padding(.vertical, 15)
+                                .frame(maxWidth: .infinity)
+                                .background(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
+                                .clipShape(Capsule())
+                                .foregroundStyle(.white)
+                        }
+                        else {
+                            Text("\(Image(systemName: "archivebox.fill")) Archived")
+                                .bold()
+                                .padding(.vertical, 15)
+                                .padding(.horizontal, 20)
+                                .background(.quinary)
+                                .clipShape(Capsule())
+                                .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
+                                .frame(maxWidth: .infinity)
+                        }
                     }
                 }
                 .padding(.horizontal, 15)
                 .padding(.bottom, 10)
                 
-                // edit list color
+                // MARK: List color editor
                 ColorPicker("\(Image(systemName: "paintbrush")) Color", selection: $selectedColor)
+                    // resolves selected color to store its RGB values as doubles,
+                    // since SwiftData models cannot store Colors by default
                     .onChange(of: selectedColor) {
                         list.colorRed = Double(selectedColor.resolve(in: environment).red)
                         list.colorGreen = Double(selectedColor.resolve(in: environment).green)
@@ -93,39 +134,40 @@ struct EditListView: View {
                     .padding(.horizontal, 15)
                     .padding(.bottom, 10)
                 
-                // edit start date
-                DatePicker("\(Image(systemName: "calendar")) Departure date", selection: $list.startDate, displayedComponents: .date)
-                    .padding(15)
-                    .background(.quinary)
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                    .padding(.bottom, 10)
-                    .padding(.horizontal, 15)
-                    .onChange(of: list.startDate) {
-                        if (list.startDate > list.endDate) {
-                            list.endDate = list.startDate
+                // MARK: Departure and return date editors
+                VStack {
+                    DatePicker("\(Image(systemName: "calendar")) Departure date", selection: $list.startDate, displayedComponents: .date)
+                        .padding(15)
+                        
+                        // if user sets departure to be later than return, return is automatically
+                        // set to the same date as departure
+                        .onChange(of: list.startDate) {
+                            if (list.startDate > list.endDate) {
+                                list.endDate = list.startDate
+                            }
                         }
-                    }
-                
-                // edit end date
-                DatePicker("\(Image(systemName: "calendar")) Return date", selection: $list.endDate,
-                           in: list.startDate...Date.distantFuture, displayedComponents: .date)
-                .padding(15)
+                    
+                    // edit end date
+                    DatePicker("\(Image(systemName: "calendar")) Return date", selection: $list.endDate,
+                               in: list.startDate...Date.distantFuture, displayedComponents: .date)
+                    .padding(15)
+                }
                 .background(.quinary)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 .padding(.bottom, 10)
                 .padding(.horizontal, 15)
                 
-                // edit destination and display placemark
+                // MARK: Destination editor and display
                 LocationComponent(list: list)
                     .padding(.horizontal, 15)
                 
-                // weather
+                // MARK: Destination weather display
                 WeatherComponent(weatherUpdated: $weatherUpdated, list: list)
                     .padding(.horizontal, 15)
                 
+                // MARK: Buttons for making template from or deleting list
                 HStack(spacing: 15) {
                     
-                    // convert to template button
                     Button {
                         modelContext.insert(TemplateList(from: list))
                         
@@ -141,7 +183,6 @@ struct EditListView: View {
                     }
                     .buttonStyle(.plain)
                     
-                    // delete button
                     Button {
                         showDeleteConf = true
                     } label: {
@@ -162,21 +203,19 @@ struct EditListView: View {
                 .padding(.horizontal, 15)
                 .padding(.bottom, 10)
                 
-                HStack {
-                    // view and edit list items
-                    Text("Items")
-                        .foregroundStyle((Theme(rawValue: theme) ?? .blue).get1())
-                        .font(.title3).bold()
-                        .padding(.horizontal, 30)
-                        .padding(.vertical, 15)
-                        .background(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
-                        .clipShape(UnevenRoundedRectangle(cornerRadii:
-                                .init(topLeading: 10, bottomLeading: 0, bottomTrailing: 0, topTrailing: 10)))
-                        .padding(.leading, 15)
-                        .padding(.top, 20)
-                    Spacer()
-                }
+                // MARK: List item label and display
+                Text("Items")
+                    .foregroundStyle((Theme(rawValue: theme) ?? .blue).get1())
+                    .font(.title3).bold()
+                    .padding(.horizontal, 30)
+                    .padding(.vertical, 15)
+                    .background(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
+                    .clipShape(UnevenRoundedRectangle(cornerRadii:
+                            .init(topLeading: 10, bottomLeading: 0, bottomTrailing: 0, topTrailing: 10)))
+                    .padding(.leading, 15)
+                    .padding(.top, 20)
                 
+                // add item button
                 Button {
                     let newItem = Item()
                     list.items?.append(newItem)
@@ -186,7 +225,7 @@ struct EditListView: View {
                 }
                 .buttonStyle(.plain)
                 
-                // item filters
+                // MARK: Menu pickers for filtering items
                 HStack(spacing: 15) {
                     // category picker
                     Menu {
@@ -243,7 +282,9 @@ struct EditListView: View {
                 LazyVStack(alignment: .leading) {
                     ForEach((list.items ?? [])
                         .filter({
+                            // if Any is selected, does not check that items have a certain category/bag
                             (ignoreCategory || $0.category == categoryFilter)
+                            // items must fulfill both category and bag picker selections
                             && (ignoreBag || $0.bag == bagFilter)
                         })) { item in
                             Button {
@@ -260,16 +301,17 @@ struct EditListView: View {
             }
             .padding(.bottom, 15)
         }
+        // initializes color picker selection
         .onAppear {
             selectedColor = Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue)
         }
-        // edit item sheet
+        // sheet displays to edit tapped item
         .sheet(item: $itemToEdit, onDismiss: {
             itemEditShowingNames = false
         }) { data in
             EditItemView(list: list, item: data, showingNames: $itemEditShowingNames,
                          duration: Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: list.startDate), to: Calendar.current.startOfDay(for: list.endDate)).day ?? 0)
-                .presentationDetents([.fraction(itemEditShowingNames ? 0.6 : 0.45)])
+            .presentationDetents([.fraction(itemEditShowingNames ? 0.6 : 0.45)])
         }
         // delete confirmation
         .confirmationDialog("Delete this packing list?", isPresented: $showDeleteConf, actions: {

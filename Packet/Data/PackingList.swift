@@ -19,6 +19,7 @@ class PackingList {
     @Relationship(deleteRule: .cascade, inverse: \Item.packingList) var items: [Item]?
     var active: Bool = false
     var activeSelected: Bool = false
+    var archived: Bool = false
     var startDate: Date = Date()
     var endDate: Date = Date()
     var long: Double = 0

@@ -22,7 +22,7 @@ struct ActiveItemComponent: View {
         
         HStack {
             Button {
-                withAnimation(.linear(duration: 0.05)) {
+                withAnimation(.easeInOut(duration: 0.05)) {
                     item.checked.toggle()
                 }
             } label: {

@@ -17,6 +17,7 @@ struct ListsView: View {
     
     @State var path: NavigationPath = NavigationPath()
     @State var inDuplicateMode: Bool = false
+    @State var showArchived: Bool = false
     
     @AppStorage("theme") var theme: Int = 0
     
@@ -24,6 +25,8 @@ struct ListsView: View {
         NavigationStack(path: $path) {
             ScrollView {
                 VStack {
+                    
+                    // MARK: Menu for 3 different create list options
                     Menu {
                         Button("New empty list") {
                             let newList = PackingList()
@@ -48,9 +51,49 @@ struct ListsView: View {
                     }
                     .buttonStyle(.plain)
                     
-                    ForEach(lists) { list in
+                    // MARK: Unarchived lists
+                    ForEach(lists.filter({
+                        !$0.archived
+                    })) { list in
                         ListComponent(list: list, path: $path, inDuplicateMode: $inDuplicateMode)
                     }
+                    
+                    // MARK: Label and toggle for showing archived lists
+                    HStack {
+                        Text("Archived Lists")
+                            .foregroundStyle((Theme(rawValue: theme) ?? .blue).get1())
+                            .font(.title3).bold()
+                            .padding(.horizontal, 30)
+                            .padding(.vertical, 15)
+                            .background((Theme(rawValue: theme) ?? .blue).get2())
+                            .clipShape(UnevenRoundedRectangle(cornerRadii:
+                                    .init(topLeading: 10, bottomLeading: 0, bottomTrailing: 0, topTrailing: 10)))
+                            .padding(.leading, 15)
+                            .padding(.top, 20)
+                        Spacer()
+                        Button {
+                            withAnimation(.easeInOut) {
+                                showArchived.toggle()
+                            }
+                        } label: {
+                            Image(systemName: "chevron.down.circle")
+                                .font(.system(size: 28, weight: .bold))
+                                .padding(.horizontal, 10)
+                                .foregroundStyle((Theme(rawValue: theme) ?? .blue).get2())
+                                .rotationEffect(Angle(degrees: showArchived ? -90 : 0))
+                        }
+                        .padding(.top, 20)
+                    }
+                    
+                    // MARK: Archived lists
+                    if (showArchived) {
+                        ForEach(lists.filter({
+                            $0.archived
+                        })) { list in
+                            ListComponent(list: list, path: $path, inDuplicateMode: $inDuplicateMode)
+                        }
+                    }
+                    
                 }
                 .padding(.bottom, 15)
                 

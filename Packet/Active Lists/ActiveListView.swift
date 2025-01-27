@@ -97,7 +97,7 @@ struct ActiveListView: View {
                                                 !item.checked
                                             })
                                         ))
-                                        .animation(.linear)
+                                        .animation(.easeInOut)
                                         Text("incomplete")
                                     }
                                     
@@ -109,6 +109,30 @@ struct ActiveListView: View {
                                 .clipShape(UnevenRoundedRectangle(cornerRadii:
                                         .init(topLeading: 10, bottomLeading: 0, bottomTrailing: 0, topTrailing: 10)))
                                 .padding(.top, 20)
+                                
+                                // MARK: Reset button
+                                if ((activeList?.items ?? []).count(where: { item in
+                                        !item.checked
+                                    }) == 0
+                                ) {
+                                    Button {
+                                        withAnimation(.easeInOut) {
+                                            activeList?.activeSelected = false
+                                            activeList?.active = false
+                                            activeList?.archived = true
+                                        }
+                                    } label: {
+                                        Text("\(Image(systemName: "checkmark")) Complete and Archive")
+                                            .bold()
+                                            .padding(.vertical, 15)
+                                            .padding(.horizontal, 20)
+                                            .background(.quinary)
+                                            .clipShape(Capsule())
+                                            .foregroundStyle(Color(red: activeList?.colorRed ?? 0, green: activeList?.colorGreen ?? 0, blue: activeList?.colorBlue ?? 0))
+                                            .frame(maxWidth: .infinity)
+                                    }
+                                    .padding(.vertical, 15)
+                                }
                                 
                                 // MARK: Picker to group by item categories or bags
                                 GroupPickerComponent(groupByCategory: $groupByCategory)
