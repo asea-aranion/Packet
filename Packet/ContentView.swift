@@ -17,8 +17,15 @@ struct ContentView: View {
     
     @State var selectedTab = 2
     
+    /*
+     determines whether to add starter data on launch by
+     1) getting value from iCloud
+     2) getting locally stored value
+     3) adds data by default if neither has been initialized (startersAdded = false)
+     */
+    @State var startersAdded = NSUbiquitousKeyValueStore.default.object(forKey: "startersAdded") as? Bool ?? UserDefaults.standard.bool(forKey: "startersAdded")
+    
     @AppStorage("theme") var theme: Int = 0
-    @AppStorage("startersAdded") var startersAdded: Bool = false
     
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -54,7 +61,8 @@ struct ContentView: View {
             
             // add starter templates, categories, and bags if not already added
             if (!startersAdded) {
-                startersAdded = true
+                NSUbiquitousKeyValueStore.default.set(true, forKey: "startersAdded")
+                UserDefaults.standard.set(true, forKey: "startersAdded")
                 
                 let clothing = Category(name: "Clothing")
                 modelContext.insert(clothing)

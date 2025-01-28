@@ -21,7 +21,7 @@ struct PreferencesView: View {
         ScrollView {
             VStack(alignment: .leading) {
                 
-                // theme picker
+                // MARK: Display and picker for color theme
                 Text("Theme")
                     .font(.title3).bold()
                     .foregroundStyle((Theme(rawValue: theme) ?? .blue).get1())
@@ -34,28 +34,31 @@ struct PreferencesView: View {
                     .padding(.top, 20)
                 
                 HStack {
-                        ForEach(Theme.allCases, id: \.self) { color in
-                            Button {
-                                UserDefaults.standard.set(color.rawValue, forKey: "theme")
-                            } label: {
-                                ZStack {
+                    ForEach(Theme.allCases, id: \.self) { color in
+                        Button {
+                            UserDefaults.standard.set(color.rawValue, forKey: "theme")
+                        } label: {
+                            ZStack {
+                                // draw a two-toned circle icon
+                                Circle()
+                                    .fill(color.get1())
+                                Circle()
+                                    .trim(from: 0.375, to: 0.875)
+                                    .fill(color.get2())
+                                // draw a white border around theme icon if it is selected
+                                if (theme == color.rawValue) {
                                     Circle()
-                                        .fill(color.get1())
-                                    Circle()
-                                        .trim(from: 0.375, to: 0.875)
-                                        .fill(color.get2())
-                                    if (theme == color.rawValue) {
-                                        Circle()
-                                            .stroke(.white, lineWidth: 4)
-                                    }
+                                        .stroke(.white, lineWidth: 4)
                                 }
                             }
-                            .padding(10)
                         }
+                        .frame(maxWidth: 100)
+                        .padding(10)
+                    }
                 }
                 .padding(.horizontal, 15)
                 
-                // category editor
+                // MARK: Categories editor
                 Text("Categories")
                     .font(.title3).bold()
                     .foregroundStyle((Theme(rawValue: theme) ?? .blue).get1())
@@ -69,7 +72,7 @@ struct PreferencesView: View {
                 
                 Button {
                     modelContext.insert(Category(name: "New Category"))
-                        
+                    
                 } label: {
                     AddLabelComponent(color: (Theme(rawValue: theme) ?? .blue).get2(), text: "Add Category")
                 }
@@ -80,7 +83,7 @@ struct PreferencesView: View {
                 }
                 .padding(.horizontal, 15)
                 
-                // bag editor
+                // MARK: Bags editor
                 Text("Bags")
                     .font(.title3).bold()
                     .foregroundStyle((Theme(rawValue: theme) ?? .blue).get1())
@@ -94,7 +97,7 @@ struct PreferencesView: View {
                 
                 Button {
                     modelContext.insert(Bag(name: "New Bag"))
-                        
+                    
                 } label: {
                     AddLabelComponent(color: ((Theme(rawValue: theme) ?? .blue).get2()), text: "Add Bag")
                 }

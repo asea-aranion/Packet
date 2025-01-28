@@ -27,17 +27,6 @@ class TemplateList {
         }
     }
     
-    func uniqueItemNames() -> Set<String> {
-        
-        var result: Set<String> = []
-        
-        guard let items else { return result }
-        
-        items.forEach { result.insert($0.name) }
-        
-        return result
-    }
-    
     init() {
         items = [Item]()
     }

@@ -14,7 +14,6 @@ class Bag {
     var inEditMode: Bool = false
     var items: [Item]?
     
-    
     init(name: String) {
         self.name = name
     }
