@@ -211,7 +211,7 @@ struct EditTemplateView: View {
         
         .sheet(item: $itemToEdit) { data in
             EditTemplateItemView(list: list, item: data, showingNames: $itemEditShowingNames)
-            .presentationDetents([.fraction(itemEditShowingNames ? 0.6 : 0.45)])
+                .presentationDetents([itemEditShowingNames ? .height(450) : .height(350)])
         }
         .background((Theme(rawValue: theme) ?? .blue).get1())
         .tint(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))

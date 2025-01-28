@@ -79,7 +79,7 @@ struct EditTemplateItemView: View {
                                     Button {
                                         // autofills item name with selection and closes name list
                                         item.name = option
-                                        withAnimation(.easeInOut) {
+                                        withAnimation {
                                             showingNames = false
                                         }
                                     // only tapping the text selects the name, to prevent accidental selection
@@ -95,6 +95,7 @@ struct EditTemplateItemView: View {
                                 }
                             }
                         }
+                        .transition(.move(edge: .top).combined(with: .opacity))
                         .onAppear {
                             // checks to ensure names are only populated once
                             if (!namesPopulated) {
@@ -124,7 +125,7 @@ struct EditTemplateItemView: View {
                 
                 // MARK: Button to show name list
                 Button {
-                    withAnimation(.easeInOut) {
+                    withAnimation {
                         showingNames.toggle()
                     }
                 } label: {
@@ -133,6 +134,7 @@ struct EditTemplateItemView: View {
                         .padding(.horizontal, 10)
                         .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
                         .rotationEffect(Angle(degrees: showingNames ? -90 : 0))
+                        .animation(.easeInOut, value: showingNames)
                 }
                 .padding(.top, 40)
                 

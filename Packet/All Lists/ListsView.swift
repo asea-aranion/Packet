@@ -72,7 +72,7 @@ struct ListsView: View {
                             .padding(.top, 20)
                         Spacer()
                         Button {
-                            withAnimation(.easeInOut) {
+                            withAnimation {
                                 showArchived.toggle()
                             }
                         } label: {
@@ -81,6 +81,7 @@ struct ListsView: View {
                                 .padding(.horizontal, 10)
                                 .foregroundStyle((Theme(rawValue: theme) ?? .blue).get2())
                                 .rotationEffect(Angle(degrees: showArchived ? -90 : 0))
+                                .animation(.easeInOut, value: showArchived)
                         }
                         .padding(.top, 20)
                     }
@@ -92,6 +93,7 @@ struct ListsView: View {
                         })) { list in
                             ListComponent(list: list, path: $path, inDuplicateMode: $inDuplicateMode)
                         }
+                        .transition(.move(edge: .top).combined(with: .opacity))
                     }
                     
                 }

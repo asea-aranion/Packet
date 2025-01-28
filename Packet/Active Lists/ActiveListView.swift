@@ -42,7 +42,7 @@ struct ActiveListView: View {
                             .font(.title3).bold()
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    
+                    .transition(.move(edge: .top))
                 }
                 // otherwise, show active list selector
                 else {
@@ -77,7 +77,7 @@ struct ActiveListView: View {
                                 .font(.title3).bold()
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        
+                        .transition(.move(edge: .top))
                     }
                     // otherwise, show active list UI to check off items
                     else {
@@ -97,7 +97,7 @@ struct ActiveListView: View {
                                                 !item.checked
                                             })
                                         ))
-                                        .animation(.easeInOut)
+                                        .animation(.easeInOut(duration: 0.1))
                                         Text("incomplete")
                                     }
                                     
@@ -117,6 +117,10 @@ struct ActiveListView: View {
                                 ) {
                                     Button {
                                         withAnimation(.easeInOut) {
+                                            // reset all items to unchecked, so the list can be completed again
+                                            activeList?.items?.forEach { item in
+                                                item.checked = false
+                                            }
                                             activeList?.activeSelected = false
                                             activeList?.active = false
                                             activeList?.archived = true
@@ -132,6 +136,7 @@ struct ActiveListView: View {
                                             .frame(maxWidth: .infinity)
                                     }
                                     .padding(.vertical, 15)
+                                    .transition(.scale)
                                 }
                                 
                                 // MARK: Picker to group by item categories or bags
@@ -312,10 +317,11 @@ struct ActiveListView: View {
                         }) { data in
                             if let activeList {
                                 EditItemView(list: activeList, item: data, showingNames: $itemEditShowingNames)
-                                    .presentationDetents([.fraction(itemEditShowingNames ? 0.6 : 0.45)])
+                                    .presentationDetents([itemEditShowingNames ? .height(500) : .height(400)])
                             }
                         }
                         .scrollDismissesKeyboard(.immediately)
+                        .transition(.move(edge: .bottom))
                     }
                     
                 }

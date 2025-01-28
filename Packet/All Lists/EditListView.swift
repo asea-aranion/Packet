@@ -57,7 +57,7 @@ struct EditListView: View {
                     // can only activate list if it is not archived
                     if (!list.archived) {
                         Button {
-                            withAnimation(.easeInOut(duration: 0.1)) {
+                            withAnimation {
                                 list.active.toggle()
                             }
                         } label: {
@@ -80,6 +80,8 @@ struct EditListView: View {
                                     .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
                             }
                         }
+                        .animation(.easeInOut, value: list.active)
+                        .transition(.move(edge: .leading))
                     }
                     
                     Button {
@@ -311,7 +313,7 @@ struct EditListView: View {
         }) { data in
             EditItemView(list: list, item: data, showingNames: $itemEditShowingNames,
                          duration: Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: list.startDate), to: Calendar.current.startOfDay(for: list.endDate)).day ?? 0)
-            .presentationDetents([.fraction(itemEditShowingNames ? 0.6 : 0.45)])
+            .presentationDetents([itemEditShowingNames ? .height(500) : .height(400)])
         }
         // delete confirmation
         .confirmationDialog("Delete this packing list?", isPresented: $showDeleteConf, actions: {

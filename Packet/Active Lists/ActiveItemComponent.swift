@@ -22,7 +22,7 @@ struct ActiveItemComponent: View {
         
         HStack {
             Button {
-                withAnimation(.easeInOut(duration: 0.05)) {
+                withAnimation {
                     item.checked.toggle()
                 }
             } label: {
@@ -30,7 +30,7 @@ struct ActiveItemComponent: View {
                     .foregroundStyle(listColor)
                     .font(.system(size: 24))
                     .padding(5)
-                
+                    .animation(.easeInOut(duration: 0.1), value: item.checked)
             }
             Button {
                 itemToEdit = item
