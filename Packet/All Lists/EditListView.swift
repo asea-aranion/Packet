@@ -65,7 +65,7 @@ struct EditListView: View {
                                 Text("\(Image(systemName: "checkmark")) Active")
                                     .bold()
                                     .padding(.vertical, 15)
-                                    .frame(maxWidth: .infinity)
+                                    .frame(maxWidth: .infinity, minHeight: 60)
                                     .background(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
                                     .clipShape(Capsule())
                                     .foregroundStyle(.white)
@@ -74,18 +74,18 @@ struct EditListView: View {
                                 Text("\(Image(systemName: "xmark")) Inactive")
                                     .bold()
                                     .padding(.vertical, 15)
-                                    .frame(maxWidth: .infinity)
+                                    .frame(maxWidth: .infinity, minHeight: 60)
                                     .background(.quinary)
                                     .clipShape(Capsule())
                                     .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
                             }
                         }
-                        .animation(.easeInOut, value: list.active)
-                        .transition(.move(edge: .leading))
+                        .animation(.easeInOut(duration: 0.3), value: list.active)
+                        .transition(.move(edge: .leading).combined(with: .opacity))
                     }
                     
                     Button {
-                        withAnimation(.easeInOut(duration: 0.1)) {
+                        withAnimation {
                             if (!list.archived) {
                                 list.activeSelected = false
                                 list.active = false
@@ -96,10 +96,10 @@ struct EditListView: View {
                         }
                     } label: {
                         if (!list.archived) {
-                            Text("\(Image(systemName: "square.stack.3d.up")) Unarchived")
+                            Text("\(Image(systemName: "square.and.pencil")) Unarchived")
                                 .bold()
                                 .padding(.vertical, 15)
-                                .frame(maxWidth: .infinity)
+                                .frame(maxWidth: .infinity, minHeight: 60)
                                 .background(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
                                 .clipShape(Capsule())
                                 .foregroundStyle(.white)
@@ -108,13 +108,13 @@ struct EditListView: View {
                             Text("\(Image(systemName: "archivebox.fill")) Archived")
                                 .bold()
                                 .padding(.vertical, 15)
-                                .padding(.horizontal, 20)
+                                .frame(maxWidth: .infinity, minHeight: 60)
                                 .background(.quinary)
                                 .clipShape(Capsule())
                                 .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
-                                .frame(maxWidth: .infinity)
                         }
                     }
+                    .animation(.easeInOut(duration: 0.3), value: list.archived)
                 }
                 .padding(.horizontal, 15)
                 .padding(.bottom, 10)
