@@ -10,6 +10,8 @@ import WeatherKit
 import CoreLocation
 
 extension WeatherCondition {
+    
+    /// Gets SFSymbols name to represent each possible weather condition
     func getIconName() -> String {
         
         switch self {
@@ -61,6 +63,7 @@ extension WeatherCondition {
     }
 }
 
+/// Format for important components of daily weather returned from WeatherKit
 struct WeatherData: Identifiable {
     
     let id = UUID()
@@ -91,14 +94,20 @@ struct WeatherComponent: View {
         
         // get/show weather
         if (!weatherUpdated) {
+            // MARK: Button to load weather data
             Button {
                 
+                // clear array to prevent previous data being shown again
+                weatherData = []
+                
+                // modify dates to include midnight
                 let modifiedStart = Calendar.current.startOfDay(for: list.startDate)
                 let modifiedEnd = Calendar.current.startOfDay(for: Calendar.current.date(byAdding: .day, value: 1, to: list.endDate) ?? Date.distantFuture)
                 
                 // if the trip dates are fewer than 10 days in the future
                 if (Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: Date()), to: modifiedEnd).day ?? 0 <= 10) {
                     
+                    // get forecasted weather data
                     historical = false
                     
                     Task {
@@ -107,16 +116,22 @@ struct WeatherComponent: View {
                             daily.forecast.forEach { dayWeather in
                                 weatherData.append(WeatherData(date: dayWeather.date, high: dayWeather.highTemperature, low: dayWeather.lowTemperature, condition: dayWeather.condition))
                             }
-                            weatherUpdated = true
-                            errorText = ""
+                            
+                            withAnimation {
+                                weatherUpdated = true
+                                errorText = ""
+                            }
                         }
                         catch {
-                            errorText = "Error fetching weather data."
+                            withAnimation {
+                                errorText = "There was a problem loading weather data. Please check that trip dates and destination are correct."
+                            }
                         }
                     }
                     
                 }
-                // otherwise, use historical data
+                
+                // otherwise, use historical data for previous year
                 else if let startLessYear = Calendar.current.date(byAdding: .year, value: -1, to: modifiedStart),
                         let endLessYear = Calendar.current.date(byAdding: .year, value: -1, to: modifiedEnd) {
                     
@@ -128,11 +143,16 @@ struct WeatherComponent: View {
                             daily.forecast.forEach { dayWeather in
                                 weatherData.append(WeatherData(date: dayWeather.date, high: dayWeather.highTemperature, low: dayWeather.lowTemperature, condition: dayWeather.condition))
                             }
-                            weatherUpdated = true
-                            errorText = ""
+                            
+                            withAnimation {
+                                weatherUpdated = true
+                                errorText = ""
+                            }
                         }
                         catch {
-                            errorText = "Error fetching weather data."
+                            withAnimation {
+                                errorText = "There was a problem loading weather data. Please check that trip dates and destination are correct."
+                            }
                         }
                     }
                 }
@@ -149,10 +169,11 @@ struct WeatherComponent: View {
             .background(.quinary)
             .clipShape(RoundedRectangle(cornerRadius: 10))
             .padding(.bottom, 10)
+            .transition(.blurReplace)
         }
         else {
             
-            // display weather
+            // MARK: Horizontal scrolling weather display
             VStack(alignment: .leading) {
                 
                 HStack {
@@ -169,6 +190,8 @@ struct WeatherComponent: View {
                 ScrollView(.horizontal) {
                     HStack {
                         ForEach(weatherData) { data in
+                            
+                            // component to show each day's date, conditions, high, and low
                             VStack {
                                 Text(data.date.formatted(date: .abbreviated, time: .omitted))
                                 Image(systemName: data.condition.getIconName())
@@ -193,7 +216,7 @@ struct WeatherComponent: View {
                 .padding(.vertical, 5)
                 .padding(.horizontal, 15)
                 
-                // attribution
+                // MARK: WeatherKit attribution
                 HStack {
                     AsyncImage(url: attImage) { result in
                         result.image?
@@ -219,7 +242,11 @@ struct WeatherComponent: View {
                     attLink = try await service.attribution.legalPageURL
                 }
                 catch {
-                    errorText = "Error fetching attribution."
+                    if (errorText.isEmpty) {
+                        withAnimation {
+                            errorText = "There was a problem loading attribution."
+                        }
+                    }
                 }
                 
             }
@@ -227,11 +254,11 @@ struct WeatherComponent: View {
             .background(.quinary)
             .clipShape(RoundedRectangle(cornerRadius: 10))
             .padding(.bottom, 10)
+            .transition(.blurReplace)
             
         }
         
-        
-        // error message
+        // MARK: Error message
         if (!errorText.isEmpty) {
             Text(errorText)
                 .foregroundStyle(.red)
@@ -239,6 +266,7 @@ struct WeatherComponent: View {
                 .background(.quinary)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 .padding(.top, 5)
+                .transition(.blurReplace)
         }
         
     }

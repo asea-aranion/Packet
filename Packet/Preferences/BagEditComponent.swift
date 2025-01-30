@@ -18,6 +18,8 @@ struct BagEditComponent: View {
     
     @Bindable var bag: Bag
     
+    @State var showDeleteConf: Bool = false
+    
     init(bag: Bag) {
         _bag = .init(bag)
         let id = bag.persistentModelID
@@ -68,10 +70,7 @@ struct BagEditComponent: View {
                 }
                 
                 Button {
-                    itemsWithBag.forEach {
-                        $0.bag = nil
-                    }
-                    modelContext.delete(bag)
+                    showDeleteConf = true
                 } label: {
                     Image(systemName: "trash")
                         .foregroundStyle(.red)
@@ -95,6 +94,16 @@ struct BagEditComponent: View {
                 .padding(.trailing, 10)
             }
         }
+        .confirmationDialog("Delete this bag?", isPresented: $showDeleteConf, actions: {
+            Button("Delete", role: .destructive) {
+                itemsWithBag.forEach {
+                    $0.category = nil
+                }
+                modelContext.delete(bag)
+            }
+        }, message: {
+            Text("This will move all items in this bag into \"(No bag)\".")
+        })
         .padding(10)
         .background(.quinary)
         .clipShape(RoundedRectangle(cornerRadius: 10))

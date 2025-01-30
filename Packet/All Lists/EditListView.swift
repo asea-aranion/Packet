@@ -144,6 +144,9 @@ struct EditListView: View {
                         // if user sets departure to be later than return, return is automatically
                         // set to the same date as departure
                         .onChange(of: list.startDate) {
+                            withAnimation {
+                                weatherUpdated = false
+                            }
                             if (list.startDate > list.endDate) {
                                 list.endDate = list.startDate
                             }
@@ -153,6 +156,11 @@ struct EditListView: View {
                     DatePicker("\(Image(systemName: "calendar")) Return date", selection: $list.endDate,
                                in: list.startDate...Date.distantFuture, displayedComponents: .date)
                     .padding(15)
+                    .onChange(of: list.endDate) {
+                        withAnimation {
+                            weatherUpdated = false
+                        }
+                    }
                 }
                 .background(.quinary)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
@@ -160,7 +168,7 @@ struct EditListView: View {
                 .padding(.horizontal, 15)
                 
                 // MARK: Destination editor and display
-                LocationComponent(list: list)
+                LocationComponent(weatherUpdated: $weatherUpdated, list: list)
                     .padding(.horizontal, 15)
                 
                 // MARK: Destination weather display

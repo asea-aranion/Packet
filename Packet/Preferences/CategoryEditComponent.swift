@@ -18,6 +18,8 @@ struct CategoryEditComponent: View {
     
     @Bindable var category: Category
     
+    @State var showDeleteConf: Bool = false
+    
     init(category: Category) {
         _category = .init(category)
         let id = category.persistentModelID
@@ -68,10 +70,7 @@ struct CategoryEditComponent: View {
                 }
                 
                 Button {
-                    itemsWithCategory.forEach {
-                        $0.category = nil
-                    }
-                    modelContext.delete(category)
+                    showDeleteConf = true
                 } label: {
                     Image(systemName: "trash")
                         .foregroundStyle(.red)
@@ -95,6 +94,16 @@ struct CategoryEditComponent: View {
                 .padding(.trailing, 10)
             }
         }
+        .confirmationDialog("Delete this category?", isPresented: $showDeleteConf, actions: {
+            Button("Delete", role: .destructive) {
+                itemsWithCategory.forEach {
+                    $0.category = nil
+                }
+                modelContext.delete(category)
+            }
+        }, message: {
+            Text("This will move all items in this category into \"(No category)\".")
+        })
         .padding(10)
         .background(.quinary)
         .clipShape(RoundedRectangle(cornerRadius: 10))

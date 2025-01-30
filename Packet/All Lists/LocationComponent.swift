@@ -10,6 +10,7 @@ import SwiftUI
 import WeatherKit
 
 extension CLPlacemark {
+    /// Gets a string representation of a placemark to display
     func locationString() -> String {
         
         var result: String = ""
@@ -36,6 +37,8 @@ struct LocationComponent: View {
     @State var errorText: String = ""
     @State var inEditMode: Bool = false
     
+    @Binding var weatherUpdated: Bool
+    
     @Bindable var list: PackingList
     
     var body: some View {
@@ -46,7 +49,7 @@ struct LocationComponent: View {
             
             Image(systemName: "mappin.and.ellipse")
             
-            // location text/field
+            // MARK: Location text display and field
             VStack(spacing: 0) {
                 
                 if (inEditMode) {
@@ -72,8 +75,7 @@ struct LocationComponent: View {
             }
             .padding(.horizontal, 10)
             
-            
-            // edit button
+            // MARK: Edit button
             Button {
                 if (!inEditMode) {
                     withAnimation(.easeInOut) {
@@ -81,6 +83,7 @@ struct LocationComponent: View {
                     }
                 }
                 else {
+                    // attempts to get coordinates for user-entered location string
                     CLGeocoder().geocodeAddressString(locText, completionHandler: { (placemarks, error) in
                         if error == nil, let realPlacemark = placemarks?.first {
                             placemark = realPlacemark
@@ -89,11 +92,14 @@ struct LocationComponent: View {
                             withAnimation(.easeInOut) {
                                 errorText = ""
                                 inEditMode = false
+                                weatherUpdated = false
                             }
                             
                         }
                         else {
-                            errorText = "Location could not be found."
+                            withAnimation {
+                                errorText = "Location could not be found. Please try again."
+                            }
                         }
                     })
                 }
@@ -125,6 +131,7 @@ struct LocationComponent: View {
         .padding(.bottom, 10)
         
         .onAppear {
+            // gets placemark for coordinates stored in PackingList
             CLGeocoder().reverseGeocodeLocation(CLLocation(latitude: list.lat, longitude: list.long),
                                                 completionHandler: { (placemarks, error) in
                 if let realPlacemark = placemarks?.first {
@@ -134,7 +141,7 @@ struct LocationComponent: View {
             })
         }
         
-        // error message
+        // MARK: Error message
         if (!errorText.isEmpty) {
             Text(errorText)
                 .foregroundStyle(.red)
@@ -142,6 +149,7 @@ struct LocationComponent: View {
                 .background(.quinary)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 .padding(.bottom, 10)
+                .transition(.blurReplace)
         }
         
     }
