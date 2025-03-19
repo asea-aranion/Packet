@@ -12,6 +12,8 @@ enum Theme: Int, CaseIterable {
     case green
     case red
     case yellow
+    case purple
+    case orange
     
     func get1() -> Color {
         switch self {
@@ -23,6 +25,10 @@ enum Theme: Int, CaseIterable {
             return Color("Red1")
         case .yellow:
             return Color("Yellow1")
+        case .purple:
+            return Color("Purple1")
+        case .orange:
+            return Color("Orange1")
             
         }
     }
@@ -37,6 +43,10 @@ enum Theme: Int, CaseIterable {
             return Color("Red2")
         case .yellow:
             return Color("Yellow2")
+        case .purple:
+            return Color("Purple2")
+        case .orange:
+            return Color("Orange2")
             
         }
     }

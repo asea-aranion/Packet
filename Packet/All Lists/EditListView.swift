@@ -68,7 +68,7 @@ struct EditListView: View {
                                     .frame(maxWidth: .infinity, minHeight: 60)
                                     .background(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
                                     .clipShape(Capsule())
-                                    .foregroundStyle(.white)
+                                    .foregroundStyle((Theme(rawValue: theme) ?? .blue).get1())
                             }
                             else {
                                 Text("\(Image(systemName: "xmark")) Inactive")
@@ -102,7 +102,7 @@ struct EditListView: View {
                                 .frame(maxWidth: .infinity, minHeight: 60)
                                 .background(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
                                 .clipShape(Capsule())
-                                .foregroundStyle(.white)
+                                .foregroundStyle((Theme(rawValue: theme) ?? .blue).get1())
                         }
                         else {
                             Text("\(Image(systemName: "archivebox.fill")) Archived")

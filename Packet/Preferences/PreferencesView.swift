@@ -33,7 +33,10 @@ struct PreferencesView: View {
                     .padding(.leading, 15)
                     .padding(.top, 20)
                 
-                HStack {
+                LazyVGrid(columns: [
+                    GridItem(.flexible(), spacing: 15), GridItem(.flexible(), spacing: 15), GridItem(.flexible(), spacing: 15), GridItem(.flexible(), spacing: 15)
+                ], spacing: 15) {
+                    
                     ForEach(Theme.allCases, id: \.self) { color in
                         Button {
                             UserDefaults.standard.set(color.rawValue, forKey: "theme")
@@ -52,11 +55,10 @@ struct PreferencesView: View {
                                 }
                             }
                         }
-                        .frame(maxWidth: 100)
-                        .padding(10)
                     }
                 }
                 .padding(.horizontal, 15)
+                .padding(.top, 10)
                 
                 // MARK: Categories editor
                 Text("Categories")
