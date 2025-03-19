@@ -36,13 +36,13 @@ struct BagEditComponent: View {
                 
                 if (bag.inEditMode) {
                     TextField("Bag name", text: $bag.name)
-                        .font(.title3)
+                        .bold()
                         .multilineTextAlignment(.leading)
                         .padding(.top, 5)
                 }
                 else {
                     Text(bag.name)
-                        .font(.title3)
+                        .bold()
                         .multilineTextAlignment(.leading)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.top, 6)

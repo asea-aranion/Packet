@@ -43,6 +43,7 @@ struct ListComponent: View {
                         Button("Duplicate") {
                             let newList = PackingList.init(from: list)
                             modelContext.insert(newList)
+                            inDuplicateMode.toggle()
                             path.append(newList)
                         }
                         .bold()

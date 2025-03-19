@@ -20,10 +20,10 @@ struct ItemComponent: View {
                 Text(String(item.quantity))
                     .foregroundStyle(listColor)
                     .bold()
-                    .frame(minWidth: 34, minHeight: 34)
+                    .frame(minWidth: 30, minHeight: 30)
                     .overlay {
                         Circle()
-                            .stroke(listColor, lineWidth: 3)
+                            .stroke(listColor, lineWidth: 2.5)
                     }
                 Text(item.name)
                     .padding(.leading, 3)

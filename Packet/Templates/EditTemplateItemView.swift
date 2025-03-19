@@ -195,20 +195,36 @@ struct EditTemplateItemView: View {
             }
             .padding(.horizontal, 15)
             
-            // MARK: Button to delete item
-            Button {
-                showDeleteConf = true
-            } label: {
-                Text("\(Image(systemName: "trash")) Delete")
-                    .bold()
+            HStack(spacing: 15) {
+                Button {
+                    dismiss()
+                } label: {
+                    Text("\(Image(systemName: "checkmark.square")) Save")
+                        .bold()
+                }
+                .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
+                .padding(.vertical, 15)
+                .frame(maxWidth: .infinity)
+                .background(.quinary)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+                
+                // MARK: Button to delete item
+                Button {
+                    showDeleteConf = true
+                } label: {
+                    Text("\(Image(systemName: "trash")) Delete")
+                        .bold()
+                }
+                .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
+                .padding(.vertical, 15)
+                .frame(maxWidth: .infinity)
+                .background(.quinary)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+                
             }
-            .foregroundStyle(.red)
-            .padding(.vertical, 15)
-            .padding(.horizontal, 20)
-            .background(.quinary)
-            .clipShape(RoundedRectangle(cornerRadius: 10))
             .padding(.horizontal, 15)
             .padding(.top, 10)
+            
             
         }
         .padding(.top, 10)

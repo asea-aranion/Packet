@@ -36,13 +36,13 @@ struct CategoryEditComponent: View {
                 
                 if (category.inEditMode) {
                     TextField("Category name", text: $category.name)
-                        .font(.title3)
+                        .bold()
                         .multilineTextAlignment(.leading)
                         .padding(.top, 5)
                 }
                 else {
                     Text(category.name)
-                        .font(.title3)
+                        .bold()
                         .multilineTextAlignment(.leading)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.top, 6)

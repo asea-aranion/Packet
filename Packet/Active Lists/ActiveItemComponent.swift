@@ -26,9 +26,9 @@ struct ActiveItemComponent: View {
                     item.checked.toggle()
                 }
             } label: {
-                Image(systemName: item.checked ? "checkmark.circle" : "circle")
+                Image(systemName: item.checked ? "checkmark.circle" : "circle.dashed")
                     .foregroundStyle(listColor)
-                    .font(.system(size: 24))
+                    .font(.system(size: 26))
                     .padding(5)
                     .animation(.easeInOut(duration: 0.1), value: item.checked)
             }
@@ -38,10 +38,10 @@ struct ActiveItemComponent: View {
                 Text(String(item.quantity))
                     .foregroundStyle(listColor)
                     .bold()
-                    .frame(minWidth: 34, minHeight: 34)
+                    .frame(minWidth: 30, minHeight: 30)
                     .overlay {
                         Circle()
-                            .stroke(listColor, lineWidth: 3)
+                            .stroke(listColor, lineWidth: 2.5)
                     }
                 Text(item.name)
                     .padding(.horizontal, 3)

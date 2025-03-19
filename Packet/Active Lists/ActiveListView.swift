@@ -197,7 +197,10 @@ struct ActiveListView: View {
                                                     else {
                                                         return false
                                                     }
-                                                })) { item in
+                                                })
+                                                    .sorted(by: {
+                                                        !$0.checked && $1.checked
+                                                    })) { item in
                                                     ActiveItemComponent(item: item, itemToEdit: $itemToEdit, showCategory: false, listColor: Color(red: activeList?.colorRed ?? 0, green: activeList?.colorGreen ?? 0, blue: activeList?.colorBlue ?? 0))
                                                 }
                                                 .background(.quinary)
@@ -227,6 +230,8 @@ struct ActiveListView: View {
                                                     // shows all items if nothing has been entered in search field
                                                     (searchText.isEmpty || $0.name.localizedCaseInsensitiveContains(searchText)) &&
                                                         $0.category == nil
+                                                }).sorted(by: {
+                                                    !$0.checked && $1.checked
                                                 })) { item in
                                                     ActiveItemComponent(item: item, itemToEdit: $itemToEdit, showCategory: false, listColor: Color(red: activeList?.colorRed ?? 0, green: activeList?.colorGreen ?? 0, blue: activeList?.colorBlue ?? 0))
                                                 }
@@ -268,7 +273,10 @@ struct ActiveListView: View {
                                                     else {
                                                         return false
                                                     }
-                                                })) { item in
+                                                })
+                                                    .sorted(by: {
+                                                        !$0.checked && $1.checked
+                                                    })) { item in
                                                     ActiveItemComponent(item: item, itemToEdit: $itemToEdit, showCategory: true, listColor: Color(red: activeList?.colorRed ?? 0, green: activeList?.colorGreen ?? 0, blue: activeList?.colorBlue ?? 0))
                                                 }
                                                 .background(.quinary)
@@ -298,6 +306,8 @@ struct ActiveListView: View {
                                                     // shows all items if nothing has been entered in search field
                                                     (searchText.isEmpty || $0.name.localizedCaseInsensitiveContains(searchText)) &&
                                                         $0.bag == nil
+                                                }).sorted(by: {
+                                                    !$0.checked && $1.checked
                                                 })) { item in
                                                     ActiveItemComponent(item: item, itemToEdit: $itemToEdit, showCategory: true, listColor: Color(red: activeList?.colorRed ?? 0, green: activeList?.colorGreen ?? 0, blue: activeList?.colorBlue ?? 0))
                                                 }
