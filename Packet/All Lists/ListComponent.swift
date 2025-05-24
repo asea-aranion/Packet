@@ -58,6 +58,7 @@ struct ListComponent: View {
                             .font(.system(size: 24, weight: .bold))
                             .padding(.trailing, 15)
                             .buttonStyle(.plain)
+                            .accessibilityHint("Opens list editor")
                     }
                 }
                 .padding(.vertical, 25)

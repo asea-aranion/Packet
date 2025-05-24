@@ -100,6 +100,7 @@ struct ActiveListView: View {
                                         .animation(.easeInOut(duration: 0.1))
                                         Text("incomplete")
                                     }
+                                    .accessibilityElement(children: .combine)
                                     
                                 }
                                 .foregroundStyle((Theme(rawValue: theme) ?? .blue).get1())

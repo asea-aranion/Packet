@@ -55,6 +55,7 @@ struct PreferencesView: View {
                                 }
                             }
                         }
+                        .accessibilityHint("Changes color theme to \(color.getColorName())")
                     }
                 }
                 .padding(.horizontal, 15)

@@ -82,6 +82,7 @@ struct EditListView: View {
                         }
                         .animation(.easeInOut(duration: 0.3), value: list.active)
                         .transition(.move(edge: .leading).combined(with: .opacity))
+                        .accessibilityHint(list.active ? "Makes list inactive" : "Makes list active")
                     }
                     
                     Button {
@@ -115,6 +116,7 @@ struct EditListView: View {
                         }
                     }
                     .animation(.easeInOut(duration: 0.3), value: list.archived)
+                    .accessibilityHint(list.archived ? "Unarchives this list" : "Archives this list")
                 }
                 .padding(.horizontal, 15)
                 .padding(.bottom, 10)
@@ -172,8 +174,10 @@ struct EditListView: View {
                     .padding(.horizontal, 15)
                 
                 // MARK: Destination weather display
-                WeatherComponent(weatherUpdated: $weatherUpdated, list: list)
-                    .padding(.horizontal, 15)
+                if (list.lat != 0 && list.long != 0) {
+                    WeatherComponent(weatherUpdated: $weatherUpdated, list: list)
+                        .padding(.horizontal, 15)
+                }
                 
                 // MARK: Buttons for making template from or deleting list
                 HStack(spacing: 15) {

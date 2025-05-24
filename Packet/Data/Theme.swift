@@ -50,4 +50,21 @@ enum Theme: Int, CaseIterable {
             
         }
     }
+    
+    func getColorName() -> String {
+        switch self {
+        case .blue:
+            return "Blue"
+        case .green:
+            return "Green"
+        case .red:
+            return "Red"
+        case .yellow:
+            return "Yellow"
+        case .purple:
+            return "Purple"
+        case .orange:
+            return "Orange"
+        }
+    }
 }

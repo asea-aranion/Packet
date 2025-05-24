@@ -83,6 +83,7 @@ struct ListsView: View {
                                 .rotationEffect(Angle(degrees: showArchived ? -90 : 0))
                                 .animation(.easeInOut, value: showArchived)
                         }
+                        .accessibilityHint(showArchived ? "Hide archived lists" : "Show archived lists")
                         .padding(.top, 20)
                     }
                     

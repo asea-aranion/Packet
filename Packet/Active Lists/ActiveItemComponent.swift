@@ -32,6 +32,7 @@ struct ActiveItemComponent: View {
                     .padding(5)
                     .animation(.easeInOut(duration: 0.1), value: item.checked)
             }
+            .accessibilityHint(item.checked ? "Marks item incomplete" : "Marks item complete")
             Button {
                 itemToEdit = item
             } label: {
