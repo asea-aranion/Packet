@@ -67,7 +67,8 @@ struct ListComponent: View {
         
         .background(.quinary)
         .clipShape(RoundedRectangle(cornerRadius: 10))
-        .padding(15)
+        .padding(.vertical, 10)
+        .padding(.horizontal, 15)
         .onTapGesture {
             if (!inDuplicateMode) {
                 path.append(list)

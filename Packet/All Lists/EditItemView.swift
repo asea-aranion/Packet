@@ -94,6 +94,7 @@ struct EditItemView: View {
                                     .frame(maxWidth: .infinity)
                                     .background(.quinary)
                                     .clipShape(RoundedRectangle(cornerRadius: 10))
+                                    .accessibilityHint("Sets name to \(item.name)")
                                 }
                             }
                         }
@@ -137,6 +138,7 @@ struct EditItemView: View {
                         .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
                         .rotationEffect(Angle(degrees: showingNames ? -90 : 0))
                         .animation(.easeInOut, value: showingNames)
+                        .accessibilityHint("Shows name autocomplete list")
                 }
                 .padding(.top, 40)
                 

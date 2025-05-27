@@ -209,6 +209,7 @@ struct WeatherComponent: View {
                                 .bold()
                             }
                             .padding(.horizontal, 8)
+                            .accessibilityElement(children: .combine)
                         }
                     }
                     .padding(.bottom, 8)

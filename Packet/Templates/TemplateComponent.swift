@@ -39,13 +39,15 @@ struct TemplateComponent: View {
                     .font(.system(size: 24, weight: .bold))
                     .padding(.trailing, 15)
                     .buttonStyle(.plain)
+                    .accessibilityHint("Opens template editor")
                 
             }
             .padding(.vertical, 25)
         }
         .background(.quinary)
         .clipShape(RoundedRectangle(cornerRadius: 10))
-        .padding(15)
+        .padding(.vertical, 10)
+        .padding(.horizontal, 15)
         .onTapGesture {
             path.append(list)
         }

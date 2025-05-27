@@ -118,6 +118,7 @@ struct LocationComponent: View {
                         .font(.system(size: 20, weight: .bold))
                         .padding(.horizontal, 15)
                         .foregroundStyle(Color(red: list.colorRed, green: list.colorGreen, blue: list.colorBlue))
+                        .accessibilityHint("Saves location")
                 }
                 
             }
