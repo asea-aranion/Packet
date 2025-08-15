@@ -90,6 +90,40 @@ struct WeatherComponent: View {
     
     let service = WeatherService()
     
+    /// Get the weather at the trip destination between the specified dates using batched API calls
+    func fetchWeather(startDate: Date, endDate: Date) async -> Bool {
+        weatherData = []
+        
+        var intervalStart = startDate
+        var intervalEnd = Calendar.current.date(byAdding: .day, value: 9, to: startDate)!
+        
+        while (intervalEnd <= endDate) {
+            do {
+                let daily = try await service.weather(for: CLLocation(latitude: list.lat, longitude: list.long), including: .daily(startDate: intervalStart, endDate: intervalEnd))
+                daily.forecast.forEach { dayWeather in
+                    weatherData.append(WeatherData(date: dayWeather.date, high: dayWeather.highTemperature, low: dayWeather.lowTemperature, condition: dayWeather.condition))
+                }
+                intervalStart = Calendar.current.date(byAdding: .day, value: 9, to: intervalStart)!
+                intervalEnd = Calendar.current.date(byAdding: .day, value: 9, to: intervalEnd)!
+            } catch {
+                return false
+            }
+        }
+        
+        if (intervalStart < endDate) {
+            do {
+                let daily = try await service.weather(for: CLLocation(latitude: list.lat, longitude: list.long), including: .daily(startDate: intervalStart, endDate: endDate))
+                daily.forecast.forEach { dayWeather in
+                    weatherData.append(WeatherData(date: dayWeather.date, high: dayWeather.highTemperature, low: dayWeather.lowTemperature, condition: dayWeather.condition))
+                }
+            } catch {
+                return false
+            }
+        }
+        
+        return true
+    }
+    
     var body: some View {
         
         // get/show weather
@@ -111,24 +145,19 @@ struct WeatherComponent: View {
                     historical = false
                     
                     Task {
-                        do {
-                            let daily = try await service.weather(for: CLLocation(latitude: list.lat, longitude: list.long), including: .daily(startDate: modifiedStart, endDate: modifiedEnd))
-                            daily.forecast.forEach { dayWeather in
-                                weatherData.append(WeatherData(date: dayWeather.date, high: dayWeather.highTemperature, low: dayWeather.lowTemperature, condition: dayWeather.condition))
-                            }
-                            
+                        let success = await fetchWeather(startDate: modifiedStart, endDate: modifiedEnd)
+                        
+                        if (success) {
                             withAnimation {
                                 weatherUpdated = true
                                 errorText = ""
                             }
-                        }
-                        catch {
+                        } else {
                             withAnimation {
                                 errorText = "There was a problem loading weather data. Please check that trip dates and destination are correct."
                             }
                         }
                     }
-                    
                 }
                 
                 // otherwise, use historical data for previous year
@@ -138,18 +167,14 @@ struct WeatherComponent: View {
                     historical = true
                     
                     Task {
-                        do {
-                            let daily = try await service.weather(for: CLLocation(latitude: list.lat, longitude: list.long), including: .daily(startDate: startLessYear, endDate: endLessYear))
-                            daily.forecast.forEach { dayWeather in
-                                weatherData.append(WeatherData(date: dayWeather.date, high: dayWeather.highTemperature, low: dayWeather.lowTemperature, condition: dayWeather.condition))
-                            }
-                            
+                        let success = await fetchWeather(startDate: startLessYear, endDate: endLessYear)
+                        
+                        if (success) {
                             withAnimation {
                                 weatherUpdated = true
                                 errorText = ""
                             }
-                        }
-                        catch {
+                        } else {
                             withAnimation {
                                 errorText = "There was a problem loading weather data. Please check that trip dates and destination are correct."
                             }
